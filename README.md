@@ -1,99 +1,130 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# MoneyMesh
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A web-based personal finance application with a **ledger-style transaction system** that supports multi-currency tracking, budgeting, and investment management. Built with **GraphQL, PostgreSQL, Node.js, and React**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+---
 
-## Description
+## 🚀 Features
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 🏦 **Accounts & Transactions**
 
-## Project setup
+- Multiple accounts (Bank, Cash, Crypto, Investment)
+- Track income, expenses, and transfers
+- Multi-currency support with real-time exchange rates
 
-```bash
-$ yarn install
+### 📊 **Budgeting & Reports**
+
+- Set monthly budgets per category
+- Get spending alerts when exceeding limits
+- Generate **monthly, yearly, and custom reports**
+
+### 📈 **Investments & Asset Tracking**
+
+- Track investments (Stocks, Crypto, Bonds, Real Estate)
+
+### 🔐 **Security & Data Management**
+
+- User authentication (JWT-based)
+- Encrypted storage for sensitive data
+- Export data in CSV or PDF
+
+---
+
+## 🏗️ Architecture Overview
+
+### 🖥️ **Frontend**
+
+- **React (Next.js / Vite)** – UI Framework
+- **Apollo Client** – GraphQL API integration
+- **Tailwind CSS** – Styling
+
+### 🖥️ **Backend**
+
+- **Node.js (Express + Apollo Server)** – GraphQL API
+- **PostgreSQL + Prisma ORM** – Database
+
+### 🔌 **Third-Party Integrations**
+
+- **Exchange Rate API** – Multi-currency conversions
+
+---
+
+## 📂 Directory Structure
+
+```
+personal-finance-ledger/
+│── backend/                     # Backend service
+│   ├── src/
+│   │   ├── graphql/              # GraphQL Resolvers & Schema
+│   │   ├── models/               # Prisma models
+│   │   ├── services/             # Business logic
+│   │   ├── database.ts           # PostgreSQL connection
+│   │   ├── index.ts              # Entry point
+│   ├── .env                      # Environment variables
+│   ├── package.json              # Backend dependencies
+│
+│── frontend/                     # Frontend service
+│   ├── src/
+│   │   ├── components/           # Reusable UI components
+│   │   ├── pages/                # Main pages (Dashboard, Reports, Settings)
+│   │   ├── graphql/              # Apollo Queries & Mutations
+│   │   ├── App.tsx               # Root React component
+│   ├── package.json              # Frontend dependencies
+│
+│── docs/                         # Documentation
+│   ├── api.md                    # API details
+│   ├── architecture.md            # System design explanation
+│
+│── .gitignore                     # Ignore files (node_modules, .env)
+│── README.md                      # Project documentation
+│── docker-compose.yml             # Docker setup (optional)
+│── package.json                    # Root dependencies (if monorepo)
 ```
 
-## Compile and run the project
+---
 
-```bash
-# development
-$ yarn run start
+## 🔧 **Setup & Installation**
 
-# watch mode
-$ yarn run start:dev
+### 1️⃣ **Clone the Repository**
 
-# production mode
-$ yarn run start:prod
+```sh
+git clone https://github.com/your-username/personal-finance-ledger.git
+cd personal-finance-ledger
 ```
 
-## Run tests
+### 2️⃣ **Setup Backend**
 
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```sh
+cd backend
+yarn
+cp .env.example .env   # Add your DB connection string
+npx prisma migrate dev
+yarn dev
 ```
 
-## Deployment
+---
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+### 3️⃣ **Setup Frontend**
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ yarn install -g mau
-$ mau deploy
+```sh
+cd frontend
+yarn
+yarn dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 🛠️ **Upcoming Features**
 
-## Resources
+- 🔄 Recurring transactions (Subscriptions, EMIs)
+- 🔔 Notifications & Reminders
+- 📡 Bank Sync via Open Banking APIs
+- 📈 Real-time values and profit/loss calculations
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 🙌 **Contributing**
 
-## Support
+Feel free to open issues or submit PRs. Follow the Contribution Guide for best practices.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 📝 **License**
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Open-source under the MIT License.
