@@ -1,0 +1,31 @@
+{
+	/** EDITOR BASED SETTINGS */
+	"editor.autoIndent": "advanced",
+	"editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit",
+        "source.fixAll": "explicit"
+    },
+	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.detectIndentation": false,
+	"editor.formatOnSave": true,
+	"editor.formatOnPaste": true,
+	"editor.useTabStops": true,
+	/** MAX LENGTH IN ESLINT */
+    "editor.rulers": [150],
+    /** ESLINT BASED SETTINGS */
+	"eslint.format.enable": true,
+	/** FILE BASED SETTINGS */
+	"files.eol": "\n",
+	"files.autoSave": "afterDelay",
+	"files.autoSaveDelay": 1000,
+
+    "javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+	/** ICON THEME SETTINGS */
+	"workbench.iconTheme": "material-icon-theme",
+	/** DEFAULT FORMATTER FOR TYPESCRIPT */
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"window.title": "${dirty}${activeEditorShort}${separator}${rootName}${separator}Lockdocs",
+	// ========================================================== //
+}

@@ -1,20 +1,20 @@
 {
-    "Export Statement": {
-		"scope": "javascript,typescript",
-		"prefix": "ex",
-		"body": [
-            "export * from './$1';",
-		],
-		"description": "Export * from: codeblock"
-	},
+  "Export Statement": {
+  "scope": "javascript,typescript",
+  "prefix": "ex",
+  "body": [
+          "export * from './$1';",
+  ],
+  "description": "Export * from: codeblock"
+},
 
-    "Create Logger Instance of class": {
-		"scope": "javascript,typescript",
-		"prefix": "clog",
-		"body": [
-            "private readonly className = $1.name;",
-            "private readonly logger = new Logger(this.className);",
-		],
-		"description": "Export * from: codeblock"
+"Create Logger Instance of class": {
+  "scope": "javascript,typescript",
+  "prefix": "clog",
+  "body": [
+          "private readonly className = $1.name;",
+          "private readonly logger = new Logger(this.className);",
+  ],
+  "description": "Export * from: codeblock"
 	}
 }
