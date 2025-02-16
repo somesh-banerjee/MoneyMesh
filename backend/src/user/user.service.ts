@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from './user.model';
+import { CreateUserInput } from './user.model';
 import { PrismaService } from 'src/shared/services/prisma.service/prisma.service';
-import * as bcrypt from 'bcrypt';
-import { Prisma } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 @Injectable()
 export class UserService {
@@ -10,11 +9,21 @@ export class UserService {
     private readonly prisma: PrismaService
   ) { }
 
-  async findOneById(id: string) {
-    return await this.prisma.user.findUnique({ where: { id } });
+  async findOne(input: { id?: string, email?: string }) {
+    return await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          {
+            id: input.id
+          }, {
+            email: input.email
+          }
+        ]
+      }
+    });
   }
 
-  async create(createUserInput: Prisma.UserCreateInput) {
+  async create(createUserInput: CreateUserInput) {
     const hashedPassword = await bcrypt.hash(createUserInput.password, 10);
     const user = { ...createUserInput, password: hashedPassword };
     return await this.prisma.user.create({
