@@ -10,6 +10,9 @@ export class UserService {
   ) { }
 
   async findOne(input: { id?: string, email?: string }) {
+    if (!input.id && !input.email) {
+      throw new Error('You must provide either an ID or an email.');
+    }
     return await this.prisma.user.findFirst({
       where: {
         OR: [

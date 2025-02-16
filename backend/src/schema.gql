@@ -19,7 +19,7 @@ type Mutation {
 }
 
 type Query {
-  getUser(email: String, id: String): UserModel!
+  getUser: UserModel!
 }
 
 type UserModel {
