@@ -5,7 +5,7 @@
         "source.fixAll.eslint": "explicit",
         "source.fixAll": "explicit"
     },
-	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+	// "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.detectIndentation": false,
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,
