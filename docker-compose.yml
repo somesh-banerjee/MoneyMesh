@@ -25,3 +25,6 @@ services:
             - "3000:3000"
         environment:
             DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+
+volumes:
+    postgres_data:
