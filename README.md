@@ -55,11 +55,11 @@ A web-based personal finance application with a **ledger-style transaction syste
 personal-finance-ledger/
 │── backend/                     # Backend service
 │   ├── src/
-│   │   ├── graphql/              # GraphQL Resolvers & Schema
-│   │   ├── models/               # Prisma models
-│   │   ├── services/             # Business logic
-│   │   ├── database.ts           # PostgreSQL connection
-│   │   ├── index.ts              # Entry point
+│   │   ├── <entity>/             # Entity wise Modules
+│   │   │   ├── *.services.ts     # Business logic
+│   │   │   ├── *.model.ts        # Graphql objects
+│   │   │   ├── *.resolver.ts     # Resolver
+│   │   ├── main.ts               # Entry point
 │   ├── .env                      # Environment variables
 │   ├── package.json              # Backend dependencies
 │
