@@ -2,8 +2,11 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { AccountModel, CreateAccountInput, UpdateAccountInput } from "./account.model";
 import { AccountService } from "./account.service";
 import { JwtPayload } from "src/shared/decorators/jwt-payload.decorator";
+import { UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "src/shared/guards/auth.guard";
 
 @Resolver(() => AccountModel)
+@UseGuards(JwtAuthGuard)
 export class AccountResolver {
   constructor(private readonly accountService: AccountService) { }
 

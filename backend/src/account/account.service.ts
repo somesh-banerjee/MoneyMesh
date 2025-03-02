@@ -67,6 +67,7 @@ export class AccountService {
       },
       data: {
         ...updateUserInput,
+        updated_at: new Date()
       },
       include: {
         user: true

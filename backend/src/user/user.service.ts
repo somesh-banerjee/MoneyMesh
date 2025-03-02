@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserInput } from './user.model';
 import { PrismaService } from 'src/shared/services/prisma.service/prisma.service';
 import * as bcrypt from 'bcryptjs';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
+  private logger = new Logger(UserService.name);
+
   constructor(
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService
   ) { }
 
   async findOne(input: { id?: string, email?: string }) {
@@ -27,7 +31,9 @@ export class UserService {
   }
 
   async create(createUserInput: CreateUserInput) {
-    const hashedPassword = await bcrypt.hash(createUserInput.password, 10);
+    const saltRounds = this.configService.get<number>('BCRYPT.SALT_ROUNDS');
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hashedPassword = bcrypt.hashSync(createUserInput.password, salt);
     const user = { ...createUserInput, password: hashedPassword };
     return await this.prisma.user.create({
       data: user

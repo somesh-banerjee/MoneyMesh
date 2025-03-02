@@ -27,6 +27,15 @@ input CreateAccountInput {
   type: AccountType!
 }
 
+input CreateTransactionInput {
+  account_id: String!
+  amount: String!
+  category: String!
+  currency: String!
+  note: String!
+  type: TransactionType!
+}
+
 input CreateUserInput {
   email: String!
   name: String!
@@ -40,6 +49,7 @@ scalar DateTime
 
 type Mutation {
   createAccount(createAccountInput: CreateAccountInput!): AccountModel!
+  createTransaction(createTransactionInput: CreateTransactionInput!): TransactionModel!
   deleteAccount(id: String!): AccountModel!
   login(email: String!, password: String!): String!
   register(createUserInput: CreateUserInput!): UserModel!
@@ -49,7 +59,27 @@ type Mutation {
 type Query {
   account(id: String!): AccountModel!
   accounts: [AccountModel!]!
+  transaction(id: String!): TransactionModel!
+  transactions(accountId: String!): [TransactionModel!]!
   user: UserModel!
+}
+
+type TransactionModel {
+  account: AccountModel!
+  amount: String!
+  category: String!
+  created_at: DateTime!
+  currency: String!
+  id: String!
+  note: String!
+  type: TransactionType!
+  user: UserModel!
+}
+
+enum TransactionType {
+  EXPENSE
+  INCOME
+  TRANSFER
 }
 
 input UpdateAccountInput {
