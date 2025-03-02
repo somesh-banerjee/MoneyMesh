@@ -1,11 +1,16 @@
 import { ObjectType, Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { TransactionType as TransactionTypeEnum } from '@prisma/client';
+import { TransactionType as TransactionTypeEnum, TransactionDirection as TransactionDirectionEnum } from '@prisma/client';
 import { AccountModel } from 'src/account/account.model';
 import { UserModel } from 'src/user/user.model';
 
 registerEnumType(TransactionTypeEnum, {
   name: 'TransactionType'
 })
+
+registerEnumType(TransactionDirectionEnum, {
+  name: 'TransactionDirection'
+})
+
 @ObjectType()
 export class TransactionModel {
   @Field()
@@ -13,18 +18,21 @@ export class TransactionModel {
 
   @Field()
   amount: string;
-
-  @Field()
-  currency: string;
-
+  
   @Field()
   category: string;
 
-  @Field()
+  @Field({ nullable: true })
   note: string;
 
   @Field(type => TransactionTypeEnum)
   type: TransactionTypeEnum;
+
+  @Field(type => TransactionDirectionEnum)
+  direction: TransactionDirectionEnum;
+
+  @Field()
+  party: string;
 
   @Field()
   created_at: Date;
@@ -42,16 +50,19 @@ export class CreateTransactionInput {
   amount: string;
 
   @Field()
-  currency: string;
-
-  @Field()
   category: string;
 
-  @Field()
+  @Field({ nullable: true })
   note: string;
 
   @Field(type => TransactionTypeEnum)
   type: TransactionTypeEnum;
+
+  @Field(type => TransactionDirectionEnum)
+  direction: TransactionDirectionEnum;
+
+  @Field()
+  party: string;
 
   @Field()
   account_id: string;

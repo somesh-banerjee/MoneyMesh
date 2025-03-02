@@ -31,8 +31,9 @@ input CreateTransactionInput {
   account_id: String!
   amount: String!
   category: String!
-  currency: String!
-  note: String!
+  direction: TransactionDirection!
+  note: String
+  party: String!
   type: TransactionType!
 }
 
@@ -64,14 +65,20 @@ type Query {
   user: UserModel!
 }
 
+enum TransactionDirection {
+  CREDIT
+  DEBIT
+}
+
 type TransactionModel {
   account: AccountModel!
   amount: String!
   category: String!
   created_at: DateTime!
-  currency: String!
+  direction: TransactionDirection!
   id: String!
-  note: String!
+  note: String
+  party: String!
   type: TransactionType!
   user: UserModel!
 }

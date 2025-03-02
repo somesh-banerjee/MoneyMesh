@@ -1,21 +1,43 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateTransactionInput, TransactionModel } from "./transaction.model";
+import { TransactionType as TransactionTypeEnum, TransactionDirection as TransactionDirectionEnum } from '@prisma/client';
+import { Decimal } from "@prisma/client/runtime/library";
 
 @Injectable()
 export class TransactionService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createTransactionInput: CreateTransactionInput, userId: string): Promise<TransactionModel> {
-    const transaction = await this.prisma.transaction.create({
-      data: {
-        ...createTransactionInput,
-        user_id: userId
-      },
-      include: {
-        user: true,
-        account: true
-      }
+    let transaction
+
+    const singleTransaction = await this.prisma.$transaction(async (tx) => {
+      transaction = await this.prisma.transaction.create({
+        data: {
+          ...createTransactionInput,
+          user_id: userId
+        },
+        include: {
+          user: true,
+          account: true
+        }
+      })
+
+      const amount = new Decimal(transaction.amount)
+      const balanceChange = createTransactionInput.direction === TransactionDirectionEnum.CREDIT ? amount : amount.negated()
+
+      await this.prisma.account.update({
+        where: {
+          id: transaction.account_id,
+          user_id: userId
+        },
+        data: {
+          balance: {
+            increment: balanceChange
+          },
+          updated_at: new Date()
+        }
+      })
     })
 
     return {

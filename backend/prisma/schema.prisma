@@ -48,8 +48,9 @@ model Transaction {
   user_id      String
   account_id   String
   amount      Decimal
-  currency    String
   type        TransactionType
+  direction   TransactionDirection
+  party       String
   category    String
   note        String?
   created_at   DateTime  @default(now())
@@ -62,6 +63,11 @@ enum TransactionType {
   INCOME
   EXPENSE
   TRANSFER
+}
+
+enum TransactionDirection {
+  CREDIT
+  DEBIT
 }
 
 model Budget {
