@@ -2,6 +2,31 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AccountModel {
+  balance: String!
+  created_at: DateTime!
+  currency: String!
+  id: String!
+  name: String!
+  type: AccountType!
+  updated_at: DateTime!
+  user: UserModel!
+}
+
+enum AccountType {
+  BANK
+  CASH
+  CREDIT_CARD
+  CRYPTO
+  INVESTMENT
+}
+
+input CreateAccountInput {
+  currency: String!
+  name: String!
+  type: AccountType!
+}
+
 input CreateUserInput {
   email: String!
   name: String!
@@ -14,12 +39,23 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
+  createAccount(createAccountInput: CreateAccountInput!): AccountModel!
+  deleteAccount(id: String!): AccountModel!
   login(email: String!, password: String!): String!
   register(createUserInput: CreateUserInput!): UserModel!
+  updateAccount(id: String!, updateAccountInput: UpdateAccountInput!): AccountModel!
 }
 
 type Query {
-  getUser: UserModel!
+  account(id: String!): AccountModel!
+  accounts: [AccountModel!]!
+  user: UserModel!
+}
+
+input UpdateAccountInput {
+  currency: String
+  name: String
+  type: AccountType
 }
 
 type UserModel {
@@ -27,5 +63,4 @@ type UserModel {
   email: String!
   id: String!
   name: String!
-  password: String!
 }

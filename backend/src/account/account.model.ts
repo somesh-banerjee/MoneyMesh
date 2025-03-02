@@ -1,6 +1,11 @@
-import { ObjectType, Field, InputType } from '@nestjs/graphql';
+import { ObjectType, Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { UserModel } from 'src/user/user.model';
 import { AccountType as AccountTypeEnum } from '@prisma/client';
+import { Decimal } from '@prisma/client/runtime/library';
+
+registerEnumType(AccountTypeEnum, {
+  name: 'AccountType'
+})
 
 @ObjectType()
 export class AccountModel {
@@ -14,7 +19,7 @@ export class AccountModel {
   type: AccountTypeEnum;
 
   @Field()
-  balance: number;
+  balance: string;
 
   @Field()
   currency: string;

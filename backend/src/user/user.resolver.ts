@@ -9,7 +9,7 @@ import { JwtPayload } from 'src/shared/decorators/jwt-payload.decorator';
 export class UserResolver {
   constructor(private readonly userService: UserService) { }
 
-  @Query(() => UserModel)
+  @Query(() => UserModel, { name: 'user' })
   @UseGuards(JwtAuthGuard)
   async getUser(
     @JwtPayload('id') userId: any
@@ -17,7 +17,7 @@ export class UserResolver {
     return await this.userService.findOne({ id: userId });
   }
 
-  @Mutation(() => UserModel)
+  @Mutation(() => UserModel, { name: 'register' })
   async register(@Args('createUserInput') createUserInput: CreateUserInput) {
     return await this.userService.create(createUserInput);
   }

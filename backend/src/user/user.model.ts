@@ -11,7 +11,7 @@ export class UserModel {
   @Field()
   email: string;
 
-  @Field()
+  //   @Field()
   password: string;
 
   @Field()
