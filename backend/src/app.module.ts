@@ -9,6 +9,8 @@ import { SharedModule } from './shared/modules/shared.module';
 import { AuthModule } from './auth/auth.module';
 import { AccountModule } from './account/account.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { InvestmentModule } from './investment/investment.module';
+import { BudgetModule } from './budget/budget.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { TransactionModule } from './transaction/transaction.module';
     // entities
     UserModule,
     AccountModule,
+    InvestmentModule,
+    BudgetModule,
     TransactionModule
   ],
   controllers: [],

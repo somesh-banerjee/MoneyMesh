@@ -21,10 +21,38 @@ enum AccountType {
   INVESTMENT
 }
 
+type BudgetModel {
+  category: String!
+  created_at: DateTime!
+  id: String!
+  limit: String!
+  period: BudgetPeriod!
+  updated_at: DateTime!
+  user: UserModel!
+}
+
+enum BudgetPeriod {
+  MONTHLY
+  YEARLY
+}
+
 input CreateAccountInput {
   currency: String!
   name: String!
   type: AccountType!
+}
+
+input CreateBudgetInput {
+  category: String!
+  limit: String!
+  period: BudgetPeriod!
+}
+
+input CreateInvestmentInput {
+  amount_invested: String!
+  asset_name: String!
+  asset_type: InvestmentType!
+  current_value: String!
 }
 
 input CreateTransactionInput {
@@ -48,18 +76,47 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type InvestmentModel {
+  amount_invested: String!
+  asset_name: String!
+  asset_type: String!
+  created_at: DateTime!
+  current_value: String!
+  id: String!
+  updated_at: DateTime!
+  user: UserModel!
+}
+
+enum InvestmentType {
+  BOND
+  COMMODITY
+  CRYPTO
+  REAL_ESTATE
+  STOCK
+}
+
 type Mutation {
   createAccount(createAccountInput: CreateAccountInput!): AccountModel!
+  createBudget(createBudgetInput: CreateBudgetInput!): BudgetModel!
+  createInvestment(createInvestmentInput: CreateInvestmentInput!): InvestmentModel!
   createTransaction(createTransactionInput: CreateTransactionInput!): TransactionModel!
   deleteAccount(id: String!): AccountModel!
   login(email: String!, password: String!): String!
   register(createUserInput: CreateUserInput!): UserModel!
+  removeBudget(id: String!): BudgetModel!
+  removeInvestment(id: String!): InvestmentModel!
   updateAccount(id: String!, updateAccountInput: UpdateAccountInput!): AccountModel!
+  updateBudget(id: String!, updateBudgetInput: UpdateBudgetInput!): BudgetModel!
+  updateInvestment(id: String!, updateInvestmentInput: UpdateInvestmentInput!): InvestmentModel!
 }
 
 type Query {
   account(id: String!): AccountModel!
   accounts(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [AccountModel!]!
+  budget(id: String!): BudgetModel!
+  budgets(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [BudgetModel!]!
+  investment(id: String!): InvestmentModel!
+  investments(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [InvestmentModel!]!
   transaction(id: String!): TransactionModel!
   transactions(accountId: String!, limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [TransactionModel!]!
   user: UserModel!
@@ -93,6 +150,18 @@ input UpdateAccountInput {
   currency: String
   name: String
   type: AccountType
+}
+
+input UpdateBudgetInput {
+  category: String
+  limit: String
+  period: String
+}
+
+input UpdateInvestmentInput {
+  amount_invested: String
+  asset_name: String
+  current_value: String
 }
 
 type UserModel {
