@@ -21,8 +21,12 @@ export class AccountResolver {
   @Query(() => [AccountModel], { name: 'accounts' })
   async getAccounts(
     @JwtPayload('id') userId: string,
+    @Args('orderBy', { defaultValue: 'created_at' }) orderBy: 'name' | 'type' | 'balance' | 'currency' | 'created_at' | 'updated_at',
+    @Args('orderDirection', { defaultValue: 'desc' }) orderDirection: 'asc' | 'desc',
+    @Args('limit', { defaultValue: 10 }) limit: number,
+    @Args('offset', { defaultValue: 0 }) offset: number
     ): Promise<AccountModel[]> {
-    return await this.accountService.findAll(userId);
+    return await this.accountService.findAll({userId, orderBy, orderDirection, limit, offset});
   }
 
   @Mutation(() => AccountModel, { name: 'createAccount' })

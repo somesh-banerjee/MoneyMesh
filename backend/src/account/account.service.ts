@@ -26,14 +26,26 @@ export class AccountService {
     };
   }
 
-  async findAll(userId: string): Promise<AccountModel[]> {
+  async findAll(input: {
+    userId: string;
+    orderBy: 'name' | 'type' | 'balance' | 'currency' | 'created_at' | 'updated_at';
+    orderDirection: 'asc' | 'desc';
+    limit: number;
+    offset: number
+  }): Promise<AccountModel[]> {
+    const { userId, orderBy, orderDirection, limit, offset } = input;
     const accounts = await this.prisma.account.findMany({
       where: {
         user_id: userId
       },
       include: {
         user: true
-      }
+      },
+      orderBy: {
+        [orderBy]: orderDirection
+      },
+      take: limit,
+      skip: offset
     });
 
     return accounts.map(account => ({

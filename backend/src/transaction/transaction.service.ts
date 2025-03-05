@@ -52,7 +52,14 @@ export class TransactionService {
 
   }
 
-  async findAll(userId: string, accountId: string): Promise<TransactionModel[]> {
+  async findAll(input: {
+    userId: string,
+    accountId: string,
+    orderBy: 'party' | 'category' | 'type' | 'direction' | 'amount' | 'created_at' | 'updated_at',
+    orderDirection: 'asc' | 'desc',
+    limit: number, offset: number
+  }): Promise<TransactionModel[]> {
+    const { userId, accountId, orderBy, orderDirection, limit, offset } = input
     const transactions = await this.prisma.transaction.findMany({
       where: {
         user_id: userId,
@@ -61,7 +68,12 @@ export class TransactionService {
       include: {
         user: true,
         account: true
-      }
+      },
+      orderBy: {
+        [orderBy]: orderDirection
+      },
+      skip: offset,
+      take: limit
     })
 
     return transactions.map(transaction => ({

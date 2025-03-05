@@ -59,9 +59,9 @@ type Mutation {
 
 type Query {
   account(id: String!): AccountModel!
-  accounts: [AccountModel!]!
+  accounts(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [AccountModel!]!
   transaction(id: String!): TransactionModel!
-  transactions(accountId: String!): [TransactionModel!]!
+  transactions(accountId: String!, limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [TransactionModel!]!
   user: UserModel!
 }
 
