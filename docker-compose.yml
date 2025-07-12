@@ -12,7 +12,7 @@ services:
         ports:
             - "5432:5432"
         volumes:
-            - postgres_data:/var/lib/postgresql/data
+            - moneymesh_data:/var/lib/postgresql/data
 
     backend:
         build:
@@ -27,4 +27,4 @@ services:
             DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
 
 volumes:
-    postgres_data:
+    moneymesh_data:
