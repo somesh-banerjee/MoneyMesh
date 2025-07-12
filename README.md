@@ -88,8 +88,8 @@ personal-finance-ledger/
 ### 1️⃣ **Clone the Repository**
 
 ```sh
-git clone https://github.com/your-username/personal-finance-ledger.git
-cd personal-finance-ledger
+git clone https://github.com/somesh-banerjee/MoneyMesh.git
+cd MoneyMesh
 ```
 
 ### 2️⃣ **Setup Backend**
@@ -97,7 +97,7 @@ cd personal-finance-ledger
 ```sh
 cd backend
 yarn
-cp .env.example .env   # Add your DB connection string
+cp .env.example .env
 npx prisma migrate dev
 yarn dev
 ```
