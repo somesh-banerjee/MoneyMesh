@@ -6,9 +6,9 @@ import {
     InMemoryCache,
 } from "@apollo/client";
 import { createLoaderLink } from "./loaderLink";
-import { LoaderProvider, useGlobalLoader } from "./LoaderContext";
+import { useGlobalLoader } from "./LoaderContext";
 
-const ApolloWithLoader = ({ children }: { children: React.ReactNode }) => {
+export const ApolloWithLoader = ({ children }: { children: React.ReactNode }) => {
     const loader = useGlobalLoader();
 
     const client = new ApolloClient({
@@ -28,8 +28,3 @@ const ApolloWithLoader = ({ children }: { children: React.ReactNode }) => {
     return <ApolloProvider client={client}> {children} </ApolloProvider>;
 };
 
-export const AppProvider = ({ children }: { children: React.ReactNode }) => (
-    <LoaderProvider>
-        <ApolloWithLoader>{children} </ApolloWithLoader>
-    </LoaderProvider>
-);

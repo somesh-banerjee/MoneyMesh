@@ -2,15 +2,15 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
-import {AppProvider} from "./lib/apollo.tsx";
+import { AppProviders } from "./lib/AppProviders.tsx";
 import { BrowserRouter } from "react-router";
 
 createRoot(document.getElementById("root")!).render(
     <StrictMode>
-        <AppProvider>
+        <AppProviders>
             <BrowserRouter>
                 <App />
             </BrowserRouter>
-        </AppProvider>
+        </AppProviders>
     </StrictMode>
 );

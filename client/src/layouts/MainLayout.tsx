@@ -1,21 +1,14 @@
-import {
-    Home,
-    ArrowLeftRight,
-    CreditCard,
-    TrendingUp,
-    Menu,
-    Wallet,
-} from "lucide-react";
+import { Home, ArrowLeftRight, TrendingUp, Menu, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Outlet, Link, useLocation } from "react-router";
 import { useState } from "react";
 import Loader from "@/components/Loader";
+import LoginSignupModal from "@/components/LoginSignupModal";
 
 const navLinks = [
     { label: "Dashboard", icon: Home, to: "/" },
     { label: "Transactions", icon: ArrowLeftRight, to: "/transactions" },
-    { label: "Expenses", icon: CreditCard, to: "/expenses" },
     { label: "Investments", icon: TrendingUp, to: "/investments" },
     { label: "Budgets", icon: Wallet, to: "/budgets" },
 ];
@@ -85,6 +78,7 @@ export default function MainLayout() {
                 </SheetContent>
             </Sheet>
 
+            <LoginSignupModal />
             <Loader />
             {/* Main Content */}
             <main className="flex-1 p-6">
