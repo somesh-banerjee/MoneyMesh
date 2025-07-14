@@ -5,52 +5,56 @@ import { ConfigService } from '@nestjs/config';
 import { CONSTANTS, ConfigSchema } from './shared/modules/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    logger: _getLogLevels(),
-  });
+    const app = await NestFactory.create(AppModule, {
+        logger: _getLogLevels(),
+        cors: {
+            origin: ['http://localhost:5173'],
+            credentials: true,
+        },
+    });
 
-  _printEnvVariables(app);
-  await _configureServer(app);
+    _printEnvVariables(app);
+    await _configureServer(app);
 }
 
 const _printEnvVariables = (app: INestApplication) => {
-  const { logger, isIAmProd } = _getHelpersFromINestApp(app);
+    const { logger, isIAmProd } = _getHelpersFromINestApp(app);
 
-  if (!isIAmProd) logger.debug(`Final Loaded Config: ${JSON.stringify(ConfigSchema(), null, 2)}`);
+    if (!isIAmProd) logger.debug(`Final Loaded Config: ${JSON.stringify(ConfigSchema(), null, 2)}`);
 };
 
 const _getLogLevels = (): LogLevel[] => {
-  const isIAmProd = process.env.SYSTEM_NODE_ENV === CONSTANTS.ENV.PRODUCTION;
+    const isIAmProd = process.env.SYSTEM_NODE_ENV === CONSTANTS.ENV.PRODUCTION;
 
-  if (isIAmProd) {
-    return ['log', 'warn', 'error'];
-  }
+    if (isIAmProd) {
+        return ['log', 'warn', 'error'];
+    }
 
-  return ['error', 'warn', 'log', 'verbose', 'debug'];
+    return ['error', 'warn', 'log', 'verbose', 'debug'];
 };
 
 const _getHelpersFromINestApp = (app: INestApplication): { configService: ConfigService; logger: Logger; isIAmProd: boolean; } => {
-  const configService = app.get(ConfigService);
+    const configService = app.get(ConfigService);
 
-  const isIAmProd = configService.get<boolean>('SYSTEM.IS_PROD');
+    const isIAmProd = configService.get<boolean>('SYSTEM.IS_PROD');
 
-  const logger = new Logger('Main.ts');
+    const logger = new Logger('Main.ts');
 
-  return {
-    configService,
-    isIAmProd,
-    logger,
-  };
+    return {
+        configService,
+        isIAmProd,
+        logger,
+    };
 };
 
 
 const _configureServer = async (app: INestApplication) => {
-  const { logger, configService } = _getHelpersFromINestApp(app);
+    const { logger, configService } = _getHelpersFromINestApp(app);
 
-  const port = configService.get<number>('SYSTEM.PORT');
-  await app.listen(port);
+    const port = configService.get<number>('SYSTEM.PORT');
+    await app.listen(port);
 
-  logger.log(`Server started at ${port}`);
+    logger.log(`Server started at ${port}`);
 };
 
 bootstrap();

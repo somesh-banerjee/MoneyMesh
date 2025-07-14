@@ -5,6 +5,7 @@ import { Outlet, Link, useLocation } from "react-router";
 import { useState } from "react";
 import Loader from "@/components/Loader";
 import LoginSignupModal from "@/components/LoginSignupModal";
+import { Toaster } from "@/components/ui/sonner";
 
 const navLinks = [
     { label: "Dashboard", icon: Home, to: "/" },
@@ -84,6 +85,7 @@ export default function MainLayout() {
             <main className="flex-1 p-6">
                 <Outlet />
             </main>
+            <Toaster />
         </div>
     );
 }
