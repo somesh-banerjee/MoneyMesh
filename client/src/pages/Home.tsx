@@ -9,7 +9,7 @@ export default function Home() {
                         <CardTitle>Total Balance</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-semibold">12,500</p>
+                        <p className="text-2xl font-semibold">0</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -17,7 +17,7 @@ export default function Home() {
                         <CardTitle>Monthly Budget</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-semibold">2,000 / 2,500</p>
+                        <p className="text-2xl font-semibold">0 / 0</p>
                     </CardContent>
                 </Card>
             </div>
@@ -30,7 +30,7 @@ export default function Home() {
                         <CardTitle>Earning</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-semibold">2,500</p>
+                        <p className="text-2xl font-semibold">0</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -38,7 +38,7 @@ export default function Home() {
                         <CardTitle>Expenses</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-semibold">1,200</p>
+                        <p className="text-2xl font-semibold">0</p>
                     </CardContent>
                 </Card>
                 <Card>
@@ -46,7 +46,7 @@ export default function Home() {
                         <CardTitle>Investments</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-semibold">3,800</p>
+                        <p className="text-2xl font-semibold">0</p>
                     </CardContent>
                 </Card>
             </div>
