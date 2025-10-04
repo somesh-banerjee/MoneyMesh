@@ -98,16 +98,16 @@ cd MoneyMesh
 cd backend
 yarn
 cp .env.example .env
-npx prisma migrate dev
+npx prisma db push
 yarn dev
 ```
 
----
+PS: Make sure PostgreSQL is running and the connection details in `.env` are correct. You can check the docker-compose file to run it
 
 ### 3️⃣ **Setup Frontend**
 
 ```sh
-cd frontend
+cd client
 yarn
 yarn dev
 ```
