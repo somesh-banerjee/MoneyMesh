@@ -4,6 +4,7 @@ import {
     Dialog,
     DialogContent,
     DialogHeader,
+    DialogOverlay,
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -97,6 +98,7 @@ const LoginSignupModal = () => {
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
+            <DialogOverlay className="fixed inset-0 bg-white/30 backdrop-blur-sm" />
             <DialogContent className="max-w-md w-full">
                 <DialogHeader>
                     <DialogTitle className="text-center">Welcome</DialogTitle>
