@@ -15,9 +15,7 @@ type AccountModel {
 
 enum AccountType {
   BANK
-  CASH
   CREDIT_CARD
-  CRYPTO
   INVESTMENT
 }
 
@@ -52,16 +50,18 @@ input CreateInvestmentInput {
   amount_invested: String!
   asset_name: String!
   asset_type: InvestmentType!
+  currency: String!
   current_value: String!
+  expected_cagr: String!
 }
 
 input CreateTransactionInput {
   account_id: String!
   amount: String!
   category: String!
+  counterparty: String!
   direction: TransactionDirection!
-  note: String
-  party: String!
+  note: String!
   type: TransactionType!
 }
 
@@ -77,11 +77,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type InvestmentModel {
+  account: AccountModel!
   amount_invested: String!
   asset_name: String!
   asset_type: String!
   created_at: DateTime!
   current_value: String!
+  expected_cagr: String!
   id: String!
   updated_at: DateTime!
   user: UserModel!
@@ -91,6 +93,8 @@ enum InvestmentType {
   BOND
   COMMODITY
   CRYPTO
+  ETF
+  MUTUAL_FUND
   REAL_ESTATE
   STOCK
 }
@@ -131,11 +135,11 @@ type TransactionModel {
   account: AccountModel!
   amount: String!
   category: String!
+  counterparty: String!
   created_at: DateTime!
   direction: TransactionDirection!
   id: String!
-  note: String
-  party: String!
+  note: String!
   type: TransactionType!
   user: UserModel!
 }
@@ -143,6 +147,7 @@ type TransactionModel {
 enum TransactionType {
   EXPENSE
   INCOME
+  OTHER
   TRANSFER
 }
 
@@ -162,6 +167,7 @@ input UpdateInvestmentInput {
   amount_invested: String
   asset_name: String
   current_value: String
+  expected_cagr: String!
 }
 
 type UserModel {

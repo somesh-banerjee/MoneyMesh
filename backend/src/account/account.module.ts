@@ -4,6 +4,7 @@ import { AccountResolver } from "./account.resolver";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 
 @Module({
-    providers: [AccountService, AccountResolver, PrismaService],
+  providers: [AccountService, AccountResolver, PrismaService],
+  exports: [AccountService],
 })
-export class AccountModule {}
+export class AccountModule { }

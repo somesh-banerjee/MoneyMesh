@@ -22,7 +22,7 @@ export class TransactionModel {
   @Field()
   category: string;
 
-  @Field({ nullable: true })
+  @Field()
   note: string;
 
   @Field(type => TransactionTypeEnum)
@@ -32,7 +32,7 @@ export class TransactionModel {
   direction: TransactionDirectionEnum;
 
   @Field()
-  party: string;
+  counterparty: string;
 
   @Field()
   created_at: Date;
@@ -52,7 +52,7 @@ export class CreateTransactionInput {
   @Field()
   category: string;
 
-  @Field({ nullable: true })
+  @Field()
   note: string;
 
   @Field(type => TransactionTypeEnum)
@@ -62,7 +62,7 @@ export class CreateTransactionInput {
   direction: TransactionDirectionEnum;
 
   @Field()
-  party: string;
+  counterparty: string;
 
   @Field()
   account_id: string;

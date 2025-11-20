@@ -8,61 +8,61 @@ datasource db {
 }
 
 model User {
-  id          String    @id @default(uuid())
-  email       String    @unique
-  password    String
-  name        String
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @default(now())
-  
-  accounts    Account[]
+  id         String   @id @default(uuid())
+  email      String   @unique
+  password   String
+  name       String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  accounts     Account[]
   transactions Transaction[]
   budgets      Budget[]
   investments  Investment[]
 }
 
 model Account {
-  id          String    @id @default(uuid())
-  user_id      String
-  name        String
-  type        AccountType
-  balance     Decimal   @default(0.0)
-  currency    String
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @default(now())
+  id         String      @id @default(uuid())
+  user_id    String
+  name       String
+  type       AccountType
+  balance    Decimal     @default(0.0)
+  currency   String
+  created_at DateTime    @default(now())
+  updated_at DateTime    @default(now())
 
-  user        User      @relation(fields: [user_id], references: [id])
+  user         User          @relation(fields: [user_id], references: [id])
   transactions Transaction[]
+  investments  Investment[]
 }
 
 enum AccountType {
   BANK
-  CASH
   CREDIT_CARD
   INVESTMENT
-  CRYPTO
 }
 
 model Transaction {
-  id          String    @id @default(uuid())
+  id           String               @id @default(uuid())
   user_id      String
   account_id   String
-  amount      Decimal
-  type        TransactionType
-  direction   TransactionDirection
-  party       String
-  category    String
-  note        String?
-  created_at   DateTime  @default(now())
+  amount       Decimal
+  type         TransactionType
+  direction    TransactionDirection
+  counterparty String
+  category     String
+  note         String
+  created_at   DateTime             @default(now())
 
-  user        User      @relation(fields: [user_id], references: [id])
-  account     Account   @relation(fields: [account_id], references: [id])
+  user    User    @relation(fields: [user_id], references: [id])
+  account Account @relation(fields: [account_id], references: [id])
 }
 
 enum TransactionType {
   INCOME
   EXPENSE
   TRANSFER
+  OTHER
 }
 
 enum TransactionDirection {
@@ -71,15 +71,15 @@ enum TransactionDirection {
 }
 
 model Budget {
-  id          String    @id @default(uuid())
-  user_id      String
-  category    String
-  limit       Decimal
-  period      BudgetPeriod
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @default(now())
+  id         String       @id @default(uuid())
+  user_id    String
+  category   String
+  limit      Decimal
+  period     BudgetPeriod
+  created_at DateTime     @default(now())
+  updated_at DateTime     @default(now())
 
-  user        User      @relation(fields: [user_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
 }
 
 enum BudgetPeriod {
@@ -88,23 +88,27 @@ enum BudgetPeriod {
 }
 
 model Investment {
-  id          String    @id @default(uuid())
-  user_id      String
-  asset_type   InvestmentType
-  asset_name   String
+  id              String         @id @default(uuid())
+  user_id         String
+  account_id      String
+  asset_type      InvestmentType
+  asset_name      String
   amount_invested Decimal
-  current_value Decimal
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @default(now())
+  current_value   Decimal
+  expected_cagr   Decimal
+  created_at      DateTime       @default(now())
+  updated_at      DateTime       @default(now())
 
-  user        User      @relation(fields: [user_id], references: [id])
+  user    User    @relation(fields: [user_id], references: [id])
+  account Account @relation(fields: [account_id], references: [id])
 }
 
 enum InvestmentType {
   STOCK
+  MUTUAL_FUND
+  ETF
   CRYPTO
   BOND
   REAL_ESTATE
   COMMODITY
 }
-

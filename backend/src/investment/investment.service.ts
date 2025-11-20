@@ -1,19 +1,33 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateInvestmentInput, InvestmentModel, UpdateInvestmentInput } from "./investment.model";
+import { AccountService } from "src/account/account.service";
+import { AccountType } from "@prisma/client";
 
 @Injectable()
 export class InvestmentService {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService, private readonly accountService: AccountService) { }
 
   async create(input: CreateInvestmentInput, userId: string): Promise<InvestmentModel> {
+    const account = await this.accountService.create({
+      name: `${input.asset_name} Account`,
+      type: AccountType.INVESTMENT,
+      currency: input.currency
+    }, userId);
+
     const newInvestment = await this.prisma.investment.create({
       data: {
         ...input,
-        user_id: userId
+        user_id: userId,
+        account_id: account.id.trim()
       },
       include: {
-        user: true
+        user: true,
+        account: {
+          include: {
+            user: true
+          }
+        }
       }
     })
 
@@ -21,6 +35,11 @@ export class InvestmentService {
       ...newInvestment,
       amount_invested: newInvestment.amount_invested.toString(),
       current_value: newInvestment.current_value.toString(),
+      expected_cagr: newInvestment.expected_cagr.toString(),
+      account: {
+        ...newInvestment.account,
+        balance: newInvestment.account.balance.toString(),
+      }
     }
   }
 
@@ -37,7 +56,12 @@ export class InvestmentService {
         user_id: userId
       },
       include: {
-        user: true
+        user: true,
+        account: {
+          include: {
+            user: true
+          }
+        }
       },
       orderBy: {
         [orderBy]: orderDirection
@@ -50,6 +74,11 @@ export class InvestmentService {
       ...investment,
       amount_invested: investment.amount_invested.toString(),
       current_value: investment.current_value.toString(),
+      expected_cagr: investment.expected_cagr.toString(),
+      account: {
+        ...investment.account,
+        balance: investment.account.balance.toString(),
+      }
     }))
   }
 
@@ -60,7 +89,12 @@ export class InvestmentService {
         user_id: userId
       },
       include: {
-        user: true
+        user: true,
+        account: {
+          include: {
+            user: true
+          }
+        }
       }
     })
 
@@ -68,6 +102,11 @@ export class InvestmentService {
       ...investment,
       amount_invested: investment.amount_invested.toString(),
       current_value: investment.current_value.toString(),
+      expected_cagr: investment.expected_cagr.toString(),
+      account: {
+        ...investment.account,
+        balance: investment.account.balance.toString(),
+      }
     }
   }
 
@@ -82,7 +121,12 @@ export class InvestmentService {
         updated_at: new Date()
       },
       include: {
-        user: true
+        user: true,
+        account: {
+          include: {
+            user: true
+          }
+        }
       }
     })
 
@@ -90,6 +134,11 @@ export class InvestmentService {
       ...investment,
       amount_invested: investment.amount_invested.toString(),
       current_value: investment.current_value.toString(),
+      expected_cagr: investment.expected_cagr.toString(),
+      account: {
+        ...investment.account,
+        balance: investment.account.balance.toString(),
+      }
     }
   }
 
@@ -100,7 +149,12 @@ export class InvestmentService {
         user_id: userId
       },
       include: {
-        user: true
+        user: true,
+        account: {
+          include: {
+            user: true
+          }
+        }
       }
     })
 
@@ -108,6 +162,11 @@ export class InvestmentService {
       ...investment,
       amount_invested: investment.amount_invested.toString(),
       current_value: investment.current_value.toString(),
+      expected_cagr: investment.expected_cagr.toString(),
+      account: {
+        ...investment.account,
+        balance: investment.account.balance.toString(),
+      }
     }
   }
 }
