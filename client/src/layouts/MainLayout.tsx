@@ -11,7 +11,6 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Outlet, Link, useLocation } from "react-router";
 import { useState } from "react";
 import Loader from "@/components/Loader";
-import LoginSignupModal from "@/components/LoginSignupModal";
 import { Toaster } from "@/components/ui/sonner";
 import { useUser } from "@/lib/UserContext";
 
@@ -118,7 +117,6 @@ export default function MainLayout() {
                 </SheetContent>
             </Sheet>
 
-            <LoginSignupModal />
             <Loader />
             {/* Main Content */}
             <main className="flex-1 p-6">
