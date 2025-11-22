@@ -18,7 +18,7 @@ import { LOGIN_USER, REGISTER_USER } from "@/graphql/mutations/user";
 import { toast } from "sonner";
 
 const LoginSignupModal = () => {
-    const { accessToken, setAccessToken } = useUser();
+    const { accessToken, setAccessToken, setEmail } = useUser();
     const [open, setOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -50,17 +50,18 @@ const LoginSignupModal = () => {
                 variables: { email, password },
             });
 
-            console.log(data);
-
             if (data?.login) {
                 setAccessToken(data.login);
                 toast("Logged in successfully");
+                setEmail(email as string);
                 setOpen(false);
             } else {
                 setError("Invalid login response");
             }
-        } catch (err: any) {
-            setError(err.message || "Login failed");
+        } catch (err) {
+            const errorMessage =
+                err instanceof Error ? err.message : "Login failed";
+            setError(errorMessage);
         }
     };
 
@@ -75,13 +76,13 @@ const LoginSignupModal = () => {
 
             const { data } = await register({
                 variables: {
-                    input: { name, email, password },
+                    createUserInput: { name, email, password },
                 },
             });
 
             if (data?.register?.email) {
                 toast(
-                    `User created for ${data.register.email}. Please log in now`
+                    `User created for ${data.register.email}. Please log in now`,
                 );
 
                 if (loginEmailRef.current)
@@ -91,8 +92,10 @@ const LoginSignupModal = () => {
             } else {
                 setError("Invalid signup response");
             }
-        } catch (err: any) {
-            setError(err.message || "Signup failed");
+        } catch (err: unknown) {
+            const errorMessage =
+                err instanceof Error ? err.message : "Signup failed";
+            setError(errorMessage);
         }
     };
 
@@ -187,3 +190,4 @@ const LoginSignupModal = () => {
 };
 
 export default LoginSignupModal;
+

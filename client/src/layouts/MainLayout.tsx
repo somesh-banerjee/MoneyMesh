@@ -1,4 +1,11 @@
-import { Home, ArrowLeftRight, TrendingUp, Menu, Wallet } from "lucide-react";
+import {
+    Home,
+    ArrowLeftRight,
+    TrendingUp,
+    Menu,
+    Wallet,
+    LogOut,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Outlet, Link, useLocation } from "react-router";
@@ -6,6 +13,7 @@ import { useState } from "react";
 import Loader from "@/components/Loader";
 import LoginSignupModal from "@/components/LoginSignupModal";
 import { Toaster } from "@/components/ui/sonner";
+import { useUser } from "@/lib/UserContext";
 
 const navLinks = [
     { label: "Dashboard", icon: Home, to: "/" },
@@ -17,6 +25,7 @@ const navLinks = [
 export default function MainLayout() {
     const [open, setOpen] = useState(false);
     const location = useLocation();
+    const { email, logout } = useUser();
 
     return (
         <div className="flex min-h-screen">
@@ -40,6 +49,21 @@ export default function MainLayout() {
                         </Link>
                     ))}
                 </nav>
+                <div className="mt-auto pt-4 border-t">
+                    {email && (
+                        <div className="px-2 py-2 text-sm text-muted-foreground truncate">
+                            {email}
+                        </div>
+                    )}
+                    <Button
+                        variant="ghost"
+                        className="w-full justify-start"
+                        onClick={logout}
+                    >
+                        <LogOut className="mr-2 h-4 w-4" />
+                        Logout
+                    </Button>
+                </div>
             </aside>
 
             {/* Mobile Sidebar Sheet */}
@@ -76,6 +100,21 @@ export default function MainLayout() {
                             </Link>
                         ))}
                     </nav>
+                    <div className="mt-auto pt-4 border-t">
+                        {email && (
+                            <div className="px-2 py-2 text-sm text-muted-foreground truncate">
+                                {email}
+                            </div>
+                        )}
+                        <Button
+                            variant="ghost"
+                            className="w-full justify-start"
+                            onClick={logout}
+                        >
+                            <LogOut className="mr-2 h-4 w-4" />
+                            Logout
+                        </Button>
+                    </div>
                 </SheetContent>
             </Sheet>
 
@@ -89,3 +128,4 @@ export default function MainLayout() {
         </div>
     );
 }
+
