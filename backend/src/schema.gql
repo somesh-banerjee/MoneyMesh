@@ -129,11 +129,22 @@ type Query {
   budget(id: String!): BudgetModel!
   budgets(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [BudgetModel!]!
   getHomePageAnalytics(period: String! = "monthly", range: String! = "current"): HomePageAnalyticsDto!
+  getTimelineAnalytics(accountId: String!, from: DateTime!, to: DateTime!): [TimelineAnalyticsDto!]!
   investment(id: String!): InvestmentModel!
   investments(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [InvestmentModel!]!
   transaction(id: String!): TransactionModel!
   transactions(accountId: String!, limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [TransactionModel!]!
   user: UserModel!
+}
+
+type TimelineAnalyticsDto {
+  bucket: String!
+  credit: Float!
+  debit: Float!
+  earning: Float!
+  expense: Float!
+  investment: Float!
+  other: Float!
 }
 
 enum TransactionDirection {

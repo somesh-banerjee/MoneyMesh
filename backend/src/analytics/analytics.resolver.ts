@@ -1,5 +1,5 @@
 import { JwtPayload } from "src/shared/decorators/jwt-payload.decorator";
-import { HomePageAnalyticsDto } from "./analytics.dto";
+import { HomePageAnalyticsDto, TimelineAnalyticsDto } from "./analytics.dto";
 import { AnalyticsService } from "./analytics.service";
 import { Args, Query, Resolver } from "@nestjs/graphql";
 
@@ -15,5 +15,13 @@ export class AnalyticsResolver {
     return this.analyticsService.homePageAnalytics(userId, period, range)
   }
 
+  @Query(() => [TimelineAnalyticsDto])
+  async getTimelineAnalytics(
+    @JwtPayload('id') userId: string,
+    @Args('accountId') accountId: string,
+    @Args('from') from: Date,
+    @Args('to') to: Date) {
+    return this.analyticsService.timelineAnalytics(userId, accountId, from, to)
+  }
 
 }
