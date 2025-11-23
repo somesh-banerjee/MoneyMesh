@@ -6,8 +6,6 @@ import {
     InMemoryCache,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { createLoaderLink } from "./loaderLink";
-import { useGlobalLoader } from "./LoaderContext";
 import { useUser } from "./UserContext";
 
 export const ApolloWithLoader = ({
@@ -15,7 +13,6 @@ export const ApolloWithLoader = ({
 }: {
     children: React.ReactNode;
 }) => {
-    const loader = useGlobalLoader();
     const { accessToken } = useUser();
 
     const authLink = setContext((_, { headers }) => {
@@ -31,7 +28,6 @@ export const ApolloWithLoader = ({
     const client = new ApolloClient({
         link: from([
             authLink,
-            createLoaderLink(loader),
             new HttpLink({
                 uri: import.meta.env.VITE_GRAPHQL_ENDPOINT + "/graphql",
             }),
@@ -41,3 +37,4 @@ export const ApolloWithLoader = ({
 
     return <ApolloProvider client={client}> {children} </ApolloProvider>;
 };
+
