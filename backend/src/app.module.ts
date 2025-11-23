@@ -11,6 +11,7 @@ import { AccountModule } from './account/account.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { InvestmentModule } from './investment/investment.module';
 import { BudgetModule } from './budget/budget.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { BudgetModule } from './budget/budget.module';
     }),
     AuthModule,
     // entities
+    AnalyticsModule,
     UserModule,
     AccountModule,
     InvestmentModule,

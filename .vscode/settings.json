@@ -6,12 +6,13 @@
         "source.fixAll": "explicit"
     },
 	// "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.detectIndentation": false,
 	"editor.formatOnSave": true,
 	"editor.formatOnPaste": true,
 	"editor.useTabStops": true,
 	/** MAX LENGTH IN ESLINT */
-    "editor.rulers": [150],
+    "editor.rulers": [80],
     /** ESLINT BASED SETTINGS */
 	"eslint.format.enable": true,
 	/** FILE BASED SETTINGS */

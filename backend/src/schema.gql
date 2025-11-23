@@ -77,6 +77,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type HomePageAnalyticsDto {
+  earnings: Float!
+  expenses: Float!
+  investments: Float!
+  totalBankBalance: Float!
+  totalInvestment: Float!
+}
+
 type InvestmentModel {
   account: AccountModel!
   amount_invested: String!
@@ -120,6 +128,7 @@ type Query {
   accounts(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [AccountModel!]!
   budget(id: String!): BudgetModel!
   budgets(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [BudgetModel!]!
+  getHomePageAnalytics(period: String! = "monthly", range: String! = "current"): HomePageAnalyticsDto!
   investment(id: String!): InvestmentModel!
   investments(limit: Float! = 10, offset: Float! = 0, orderBy: String! = "created_at", orderDirection: String! = "desc"): [InvestmentModel!]!
   transaction(id: String!): TransactionModel!

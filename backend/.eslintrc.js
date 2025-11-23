@@ -62,7 +62,7 @@ module.exports = {
             },
         ],
         'eol-last': ['error', 'always'],
-        'max-len': ['error', { code: 150, ignoreUrls: true }],
+        'max-len': ['error', { code: 80, ignoreUrls: true }],
         'no-multiple-empty-lines': ['error', { max: 1, maxEOF: 1 }],
         'array-bracket-spacing': ['error', 'always'],
         'array-bracket-newline': ['error', { multiline: true, minItems: 6 }],
@@ -219,3 +219,4 @@ module.exports = {
         ],
     },
 };
+

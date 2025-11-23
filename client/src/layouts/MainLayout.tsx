@@ -3,7 +3,7 @@ import {
     ArrowLeftRight,
     TrendingUp,
     Menu,
-    Wallet,
+    // Wallet,
     LogOut,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,7 @@ const navLinks = [
     { label: "Dashboard", icon: Home, to: "/" },
     { label: "Transactions", icon: ArrowLeftRight, to: "/transactions" },
     { label: "Investments", icon: TrendingUp, to: "/investments" },
-    { label: "Budgets", icon: Wallet, to: "/budgets" },
+    // { label: "Budgets", icon: Wallet, to: "/budgets" },
 ];
 
 export default function MainLayout() {
