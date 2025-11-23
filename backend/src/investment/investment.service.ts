@@ -11,7 +11,7 @@ export class InvestmentService {
 
   async create(input: CreateInvestmentInput, userId: string): Promise<InvestmentModel> {
     const account = await this.accountService.create({
-      name: `${input.asset_name} Account`,
+      name: `${input.asset_name} ${input.asset_type} Account`,
       type: AccountType.INVESTMENT,
       currency: input.currency,
     }, userId);

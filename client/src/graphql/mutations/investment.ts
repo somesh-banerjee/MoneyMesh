@@ -8,6 +8,14 @@ export const CREATE_INVESTMENT = gql`
   } 
 `;
 
+export const UPDATE_INVESTMENT = gql`
+  mutation UpdateInvestment($updateInvestmentId: String!, $updateInvestmentInput: UpdateInvestmentInput!) {
+    updateInvestment(id: $updateInvestmentId, updateInvestmentInput: $updateInvestmentInput) {
+      id
+    }
+  }
+`;
+
 export interface CreateInvestmentInput {
   amount_invested: string;
   asset_name: string;
@@ -17,4 +25,7 @@ export interface CreateInvestmentInput {
   currency: string;
 }
 
+export interface UpdateInvestmentInput {
+  current_value: string;
+}
 

@@ -21,6 +21,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { InfoIcon, Plus } from "lucide-react";
 import { AddInvestmentModal } from "@/components/AddInvestmentModal";
+import { EditInvestmentValueDialog } from "@/components/EditInvestmentValueDialog";
 import { format } from "date-fns";
 import {
     Tooltip,
@@ -124,23 +125,28 @@ export default function Investments() {
                                 Invested
                             </TableHead>
                             <TableHead className="text-right">
-                                Current Value
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <InfoIcon />
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>
-                                            Update Current Value to get accurate
-                                            calculations
-                                        </p>
-                                    </TooltipContent>
-                                </Tooltip>
+                                <div className="flex items-center justify-end gap-2">
+                                    Current Value
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <InfoIcon size={12} />
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>
+                                                Update Current Value to get
+                                                accurate calculations
+                                            </p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </div>
                             </TableHead>
                             <TableHead className="text-right">
                                 Profit/Loss
                             </TableHead>
-                            <TableHead className="text-right">CAGR</TableHead>
+                            <TableHead className="text-right">
+                                {" "}
+                                Expected CAGR
+                            </TableHead>
                             <TableHead>Last Updated</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -203,10 +209,23 @@ export default function Investments() {
                                                 investment.amount_invested,
                                             )}
                                         </TableCell>
-                                        <TableCell className="text-right font-medium">
-                                            {formatCurrency(
-                                                investment.current_value,
-                                            )}
+                                        <TableCell className="text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <span className="font-medium">
+                                                    {formatCurrency(
+                                                        investment.current_value,
+                                                    )}
+                                                </span>
+                                                <EditInvestmentValueDialog
+                                                    investmentId={investment.id}
+                                                    currentValue={
+                                                        investment.current_value
+                                                    }
+                                                    onSuccess={() =>
+                                                        refetchInvestments()
+                                                    }
+                                                />
+                                            </div>
                                         </TableCell>
                                         <TableCell
                                             className={`text-right font-medium ${

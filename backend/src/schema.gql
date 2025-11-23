@@ -168,7 +168,7 @@ input UpdateInvestmentInput {
   amount_invested: String
   asset_name: String
   current_value: String
-  expected_cagr: String!
+  expected_cagr: String
 }
 
 type UserModel {

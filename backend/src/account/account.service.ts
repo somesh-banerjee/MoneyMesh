@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/shared/services/prisma.service/prisma.service';
 import { AccountModel, CreateAccountInput, UpdateAccountInput } from './account.model';
+import { AccountType } from '@prisma/client';
 
 @Injectable()
 export class AccountService {
@@ -55,6 +56,10 @@ export class AccountService {
   }
 
   async create(createUserInput: CreateAccountInput, userId: string): Promise<AccountModel> {
+    if (createUserInput.type === AccountType.INVESTMENT) {
+      throw new ForbiddenException('Investment accounts must be created through the investment mutation');
+    }
+
     const account = await this.prisma.account.create({
       data: {
         ...createUserInput,

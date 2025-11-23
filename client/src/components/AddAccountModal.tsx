@@ -13,7 +13,7 @@ import { useMutation } from "@apollo/client";
 import { CREATE_ACCOUNT } from "@/graphql/mutations/account";
 import { toast } from "sonner";
 
-type AccountType = "BANK" | "CREDIT_CARD" | "INVESTMENT";
+type AccountType = "BANK" | "CREDIT_CARD";
 
 interface AddAccountModalProps {
     onAccountAdded: () => void;
@@ -93,7 +93,6 @@ export function AddAccountModal({
                         >
                             <option value="BANK">Savings</option>
                             <option value="CREDIT_CARD">Credit Card</option>
-                            <option value="INVESTMENT">Investment</option>
                         </select>
                     </div>
                     <div className="flex justify-end gap-2">

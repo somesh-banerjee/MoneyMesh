@@ -72,6 +72,6 @@ export class UpdateInvestmentInput {
   @Field({ nullable: true })
   current_value: string;
 
-  @Field()
+  @Field({ nullable: true })
   expected_cagr: string;
 }

@@ -183,8 +183,8 @@ export default function Transactions() {
                             </p>
                             <div className="flex items-center gap-2 px-3 py-1 border rounded-md bg-secondary/10 text-foreground text-lg font-medium w-fit">
                                 <Wallet className="h-4 w-4" />
-                                {new Intl.NumberFormat('en-IN', {
-                                    style: 'currency',
+                                {new Intl.NumberFormat("en-IN", {
+                                    style: "currency",
                                     currency: accountData.account.currency,
                                 }).format(accountData.account.balance || 0)}
                             </div>
@@ -193,19 +193,21 @@ export default function Transactions() {
                 </Card>
             )}
 
-            <div className="flex items-center justify-end space-x-4">
-                <AddTransactionModal
-                    accountId={selectedAccount}
-                    onTransactionAdded={() => {
-                        // This will refetch the transactions when a new one is added
-                        if (refetchTransactions) {
-                            refetchTransactions();
-                        }
-                    }}
-                >
-                    <Button className="w-full">Add Transaction</Button>
-                </AddTransactionModal>
-            </div>
+            {accountData?.account.type !== "INVESTMENT" && (
+                <div className="flex items-center justify-end space-x-4">
+                    <AddTransactionModal
+                        accountId={selectedAccount}
+                        onTransactionAdded={() => {
+                            // This will refetch the transactions when a new one is added
+                            if (refetchTransactions) {
+                                refetchTransactions();
+                            }
+                        }}
+                    >
+                        <Button className="w-full">Add Transaction</Button>
+                    </AddTransactionModal>
+                </div>
+            )}
 
             <div className="rounded-md border">
                 <Table>
