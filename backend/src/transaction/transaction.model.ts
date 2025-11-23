@@ -65,5 +65,8 @@ export class CreateTransactionInput {
   counterparty: string;
 
   @Field()
+  created_at: Date;
+
+  @Field()
   account_id: string;
 }

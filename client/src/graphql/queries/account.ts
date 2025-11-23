@@ -9,3 +9,17 @@ export const GET_ACCOUNTS = gql`
     }
   }
 `;
+
+export const GET_ACCOUNT_BY_ID = gql`
+  query Account($accountId: String!) {
+    account(id: $accountId) {
+    balance
+    created_at
+    currency
+    id
+    name
+    type
+    updated_at
+  }
+}
+ `; 

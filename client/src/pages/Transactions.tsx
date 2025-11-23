@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_ACCOUNTS } from "@/graphql/queries/account";
+import { GET_ACCOUNT_BY_ID, GET_ACCOUNTS } from "@/graphql/queries/account";
 import { GET_TRANSACTIONS } from "@/graphql/queries/transaction";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,7 +21,15 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddAccountModal } from "@/components/AddAccountModal";
 import { format } from "date-fns";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Building, ChevronLeft, ChevronRight, Tag, Wallet } from "lucide-react";
+import { AddTransactionModal } from "@/components/AddTransactionModal";
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+} from "@/components/ui/card";
 
 type Account = {
     id: string;
@@ -48,20 +56,32 @@ export default function Transactions() {
     const { data: accountsData, refetch: refetchAccounts } =
         useQuery(GET_ACCOUNTS);
 
-    const { data: transactionsData, loading: loadingTransactions } = useQuery(
-        GET_TRANSACTIONS,
+    const { data: accountData, refetch: refetchAccount } = useQuery(
+        GET_ACCOUNT_BY_ID,
         {
             variables: {
                 accountId: selectedAccount,
-                limit: pageSize,
-                offset: page * pageSize,
-                orderBy: "created_at",
-                orderDirection: "DESC",
             },
             skip: !selectedAccount,
         },
     );
 
+    const {
+        data: transactionsData,
+        loading: loadingTransactions,
+        refetch: refetchTransactions,
+    } = useQuery(GET_TRANSACTIONS, {
+        variables: {
+            accountId: selectedAccount,
+            limit: pageSize,
+            offset: page * pageSize,
+            orderBy: "created_at",
+            orderDirection: "desc",
+        },
+        skip: !selectedAccount,
+    });
+
+    const currency = accountData?.account.currency;
     const accounts: Account[] = accountsData?.accounts || [];
     const transactions: Transaction[] = transactionsData?.transactions || [];
 
@@ -74,6 +94,8 @@ export default function Transactions() {
     useEffect(() => {
         if (selectedAccount) {
             setPage(0);
+            refetchAccount();
+            refetchTransactions();
         }
     }, [selectedAccount]);
 
@@ -111,12 +133,77 @@ export default function Transactions() {
                 </AddAccountModal>
             </div>
 
+            {/* Account Details */}
+            {accountData?.account && (
+                <Card className="w-full">
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <CardTitle className="text-2xl font-semibold flex items-center gap-2">
+                                    <Building className="h-5 w-5 text-primary" />
+                                    {accountData.account.name}
+                                </CardTitle>
+                                <CardDescription>
+                                    Account Summary
+                                </CardDescription>
+                            </div>
+
+                            {/* Currency pill */}
+                            <div className="px-3 py-1 border rounded-full bg-muted text-sm">
+                                {accountData.account.currency}
+                            </div>
+                        </div>
+                    </CardHeader>
+
+                    <CardContent className="grid grid-cols-2 gap-6">
+                        {/* Account Type */}
+                        <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">
+                                Type
+                            </p>
+                            <div className="flex items-center gap-2 px-3 py-1 border rounded-full bg-primary/10 text-primary w-fit text-sm">
+                                <Tag className="h-4 w-4" />
+                                {accountData.account.type}
+                            </div>
+                        </div>
+
+                        {/* Balance */}
+                        <div className="space-y-1">
+                            <p className="text-sm text-muted-foreground">
+                                Balance
+                            </p>
+                            <div className="flex items-center gap-2 px-3 py-1 border rounded-md bg-secondary/10 text-foreground text-lg font-medium w-fit">
+                                <Wallet className="h-4 w-4" />
+                                {new Intl.NumberFormat().format(
+                                    accountData.account.balance || 0,
+                                )}
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )}
+
+            <div className="flex items-center justify-end space-x-4">
+                <AddTransactionModal
+                    accountId={selectedAccount}
+                    onTransactionAdded={() => {
+                        // This will refetch the transactions when a new one is added
+                        if (refetchTransactions) {
+                            refetchTransactions();
+                        }
+                    }}
+                >
+                    <Button className="w-full">Add Transaction</Button>
+                </AddTransactionModal>
+            </div>
+
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         <TableRow>
                             <TableHead>Date</TableHead>
                             <TableHead>Description</TableHead>
+                            <TableHead>Type</TableHead>
                             <TableHead>Category</TableHead>
                             <TableHead className="text-right">Amount</TableHead>
                         </TableRow>
@@ -137,6 +224,9 @@ export default function Transactions() {
                                         <TableCell>
                                             <Skeleton className="h-4 w-24" />
                                         </TableCell>
+                                        <TableCell>
+                                            <Skeleton className="h-4 w-24" />
+                                        </TableCell>
                                         <TableCell className="text-right">
                                             <Skeleton className="h-4 w-16 ml-auto" />
                                         </TableCell>
@@ -144,7 +234,14 @@ export default function Transactions() {
                                 ))
                         ) : transactions.length > 0 ? (
                             transactions.map((transaction) => (
-                                <TableRow key={transaction.id}>
+                                <TableRow
+                                    key={transaction.id}
+                                    className={
+                                        transaction.direction === "CREDIT"
+                                            ? "bg-green-50 hover:bg-green-100"
+                                            : "bg-red-50 hover:bg-red-100"
+                                    }
+                                >
                                     <TableCell className="text-sm text-muted-foreground">
                                         {format(
                                             new Date(transaction.created_at),
@@ -163,6 +260,11 @@ export default function Transactions() {
                                     </TableCell>
                                     <TableCell>
                                         <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                                            {transaction.type}
+                                        </div>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
                                             {transaction.category}
                                         </div>
                                     </TableCell>
@@ -176,10 +278,10 @@ export default function Transactions() {
                                         {transaction.direction === "CREDIT"
                                             ? "+"
                                             : "-"}
-                                        $
                                         {Math.abs(transaction.amount).toFixed(
                                             2,
                                         )}
+                                        {` ${currency}`}
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -197,7 +299,6 @@ export default function Transactions() {
                 </Table>
             </div>
             <div className="flex justify-between items-center">
-
                 {/* Page size selector */}
                 <div className="flex items-center space-x-2">
                     <span className="text-sm text-muted-foreground">
@@ -253,6 +354,4 @@ export default function Transactions() {
         </div>
     );
 }
-
-
 

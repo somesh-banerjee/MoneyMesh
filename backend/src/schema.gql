@@ -60,6 +60,7 @@ input CreateTransactionInput {
   amount: String!
   category: String!
   counterparty: String!
+  created_at: DateTime!
   direction: TransactionDirection!
   note: String!
   type: TransactionType!
