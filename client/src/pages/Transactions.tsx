@@ -197,6 +197,7 @@ export default function Transactions() {
                 <div className="flex items-center justify-end space-x-4">
                     <AddTransactionModal
                         accountId={selectedAccount}
+                        accounts={accounts}
                         onTransactionAdded={() => {
                             // This will refetch the transactions when a new one is added
                             if (refetchTransactions) {

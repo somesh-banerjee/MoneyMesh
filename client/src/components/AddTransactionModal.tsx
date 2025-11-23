@@ -16,6 +16,10 @@ import { toast } from "sonner";
 
 interface AddTransactionModalProps {
     accountId: string;
+    accounts: {
+        id: string;
+        name: string;
+    }[];
     onTransactionAdded: () => void;
     children: React.ReactNode;
 }
@@ -25,6 +29,7 @@ type TransactionDirection = "CREDIT" | "DEBIT";
 
 export function AddTransactionModal({
     accountId,
+    accounts,
     onTransactionAdded,
     children,
 }: AddTransactionModalProps) {
@@ -56,6 +61,13 @@ export function AddTransactionModal({
             toast.error("Please select an account first");
             return;
         }
+        let counterparty = formData.counterparty;
+        if (formData.type === "TRANSFER") {
+            const counterpartyAccount = accounts.find(
+                (account) => account.id === formData.counterparty,
+            );
+            counterparty = counterpartyAccount?.name ?? counterparty;
+        }
 
         await createTransaction({
             variables: {
@@ -63,7 +75,7 @@ export function AddTransactionModal({
                     account_id: accountId,
                     amount: formData.amount,
                     category: formData.category,
-                    counterparty: formData.counterparty,
+                    counterparty,
                     direction: formData.direction,
                     type: formData.type,
                     note: formData.note,
@@ -71,6 +83,30 @@ export function AddTransactionModal({
                 },
             },
         });
+
+        if (formData.type === "TRANSFER") {
+            const counterpartyAccount = accounts.find(
+                (account) => account.id === formData.counterparty,
+            );
+            const currentAccount = accounts.find(
+                (account) => account.id === accountId,
+            );
+            await createTransaction({
+                variables: {
+                    createTransactionInput: {
+                        account_id: counterpartyAccount?.id,
+                        amount: formData.amount,
+                        category: formData.category,
+                        counterparty: currentAccount?.name,
+                        direction:
+                            formData.direction === "DEBIT" ? "CREDIT" : "DEBIT",
+                        type: formData.type,
+                        note: formData.note,
+                        created_at: formData.created_at,
+                    },
+                },
+            });
+        }
     };
 
     const handleChange = (
@@ -100,18 +136,6 @@ export function AddTransactionModal({
                             value={formData.amount}
                             onChange={handleChange}
                             placeholder="0"
-                            required
-                        />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="counterparty">Counterparty</Label>
-                        <Input
-                            id="counterparty"
-                            name="counterparty"
-                            value={formData.counterparty}
-                            onChange={handleChange}
-                            placeholder="e.g., Amazon, Salary, etc."
                             required
                         />
                     </div>
@@ -148,6 +172,53 @@ export function AddTransactionModal({
                                 <option value="OTHER">Other</option>
                             </select>
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="counterparty">Counterparty</Label>
+                        {formData.type === "TRANSFER" ? (
+                            <div className="space-y-2 flex-1">
+                                <select
+                                    id="counterparty"
+                                    name="counterparty"
+                                    value={formData.counterparty}
+                                    onChange={handleChange}
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    required
+                                >
+                                    {accounts
+                                        .filter(
+                                            (account: {
+                                                id: string;
+                                                name: string;
+                                            }) => account.id !== accountId,
+                                        )
+                                        .map(
+                                            (account: {
+                                                id: string;
+                                                name: string;
+                                            }) => (
+                                                <option
+                                                    key={account.id}
+                                                    value={account.id}
+                                                >
+                                                    {account.name}
+                                                </option>
+                                            ),
+                                        )}
+                                </select>
+                            </div>
+                        ) : (
+                            <Input
+                                id="counterparty"
+                                className="flex-1"
+                                name="counterparty"
+                                value={formData.counterparty}
+                                onChange={handleChange}
+                                placeholder="e.g., Amazon, Salary, etc."
+                                required
+                            />
+                        )}
                     </div>
 
                     <div className="space-y-2">

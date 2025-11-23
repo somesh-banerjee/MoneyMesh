@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateTransactionInput, TransactionModel } from "./transaction.model";
-import { TransactionType as TransactionTypeEnum, TransactionDirection as TransactionDirectionEnum } from '@prisma/client';
+import { TransactionDirection as TransactionDirectionEnum, AccountType } from '@prisma/client';
 import { Decimal } from "@prisma/client/runtime/library";
 
 @Injectable()
@@ -38,6 +38,21 @@ export class TransactionService {
           updated_at: new Date()
         }
       })
+
+      if (transaction.account.type === AccountType.INVESTMENT) {
+        await this.prisma.investment.updateMany({
+          where: {
+            account_id: createTransactionInput.account_id,
+            user_id: userId
+          },
+          data: {
+            amount_invested: {
+              increment: balanceChange
+            },
+            updated_at: new Date()
+          }
+        })
+      }
     })
 
     return {
