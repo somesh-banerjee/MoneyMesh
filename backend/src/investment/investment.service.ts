@@ -2,22 +2,40 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateInvestmentInput, InvestmentModel, UpdateInvestmentInput } from "./investment.model";
 import { AccountService } from "src/account/account.service";
-import { AccountType } from "@prisma/client";
+import { AccountType, TransactionDirection, TransactionType } from "@prisma/client";
+import { TransactionService } from "src/transaction/transaction.service";
 
 @Injectable()
 export class InvestmentService {
-  constructor(private readonly prisma: PrismaService, private readonly accountService: AccountService) { }
+  constructor(private readonly prisma: PrismaService, private readonly accountService: AccountService, private readonly transactionService: TransactionService) { }
 
   async create(input: CreateInvestmentInput, userId: string): Promise<InvestmentModel> {
     const account = await this.accountService.create({
       name: `${input.asset_name} Account`,
       type: AccountType.INVESTMENT,
-      currency: input.currency
+      currency: input.currency,
     }, userId);
+
+    if (Number(input.amount_invested) > 0) {
+      await this.transactionService.create({
+        amount: input.amount_invested,
+        type: TransactionType.OTHER,
+        direction: TransactionDirection.CREDIT,
+        account_id: account.id.trim(),
+        category: 'Investment',
+        note: 'New Investment',
+        counterparty: 'New Investment',
+        created_at: new Date(),
+      }, userId)
+    }
 
     const newInvestment = await this.prisma.investment.create({
       data: {
-        ...input,
+        asset_name: input.asset_name,
+        asset_type: input.asset_type,
+        amount_invested: input.amount_invested,
+        current_value: input.current_value,
+        expected_cagr: input.expected_cagr,
         user_id: userId,
         account_id: account.id.trim()
       },

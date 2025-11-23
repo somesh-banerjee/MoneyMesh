@@ -81,7 +81,7 @@ type InvestmentModel {
   account: AccountModel!
   amount_invested: String!
   asset_name: String!
-  asset_type: String!
+  asset_type: InvestmentType!
   created_at: DateTime!
   current_value: String!
   expected_cagr: String!

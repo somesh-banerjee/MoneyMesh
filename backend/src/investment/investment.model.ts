@@ -15,7 +15,7 @@ export class InvestmentModel {
   @Field()
   asset_name: string;
 
-  @Field()
+  @Field(type => InvestmentTypeEnum)
   asset_type: InvestmentTypeEnum;
 
   @Field()

@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_ACCOUNTS = gql`
-  query Accounts {
-    accounts {
+  query Accounts($limit: Float!, $offset: Float!, $orderBy: String!, $orderDirection: String!) {
+    accounts (limit: $limit, offset: $offset, orderBy: $orderBy, orderDirection: $orderDirection) {
       id
       name
       type

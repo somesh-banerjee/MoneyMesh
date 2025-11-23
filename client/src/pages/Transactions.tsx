@@ -53,8 +53,17 @@ export default function Transactions() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(50);
 
-    const { data: accountsData, refetch: refetchAccounts } =
-        useQuery(GET_ACCOUNTS);
+    const { data: accountsData, refetch: refetchAccounts } = useQuery(
+        GET_ACCOUNTS,
+        {
+            variables: {
+                limit: 100,
+                offset: 0,
+                orderBy: "created_at",
+                orderDirection: "asc",
+            },
+        },
+    );
 
     const { data: accountData, refetch: refetchAccount } = useQuery(
         GET_ACCOUNT_BY_ID,
@@ -174,9 +183,10 @@ export default function Transactions() {
                             </p>
                             <div className="flex items-center gap-2 px-3 py-1 border rounded-md bg-secondary/10 text-foreground text-lg font-medium w-fit">
                                 <Wallet className="h-4 w-4" />
-                                {new Intl.NumberFormat().format(
-                                    accountData.account.balance || 0,
-                                )}
+                                {new Intl.NumberFormat('en-IN', {
+                                    style: 'currency',
+                                    currency: accountData.account.currency,
+                                }).format(accountData.account.balance || 0)}
                             </div>
                         </div>
                     </CardContent>
@@ -203,8 +213,12 @@ export default function Transactions() {
                         <TableRow>
                             <TableHead>Date</TableHead>
                             <TableHead>Description</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Category</TableHead>
+                            {accountData?.account?.type === "BANK" && (
+                                <>
+                                    <TableHead>Type</TableHead>
+                                    <TableHead>Category</TableHead>
+                                </>
+                            )}
                             <TableHead className="text-right">Amount</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -245,7 +259,7 @@ export default function Transactions() {
                                     <TableCell className="text-sm text-muted-foreground">
                                         {format(
                                             new Date(transaction.created_at),
-                                            "MMM dd, yyyy",
+                                            "PP",
                                         )}
                                     </TableCell>
                                     <TableCell>
@@ -258,16 +272,20 @@ export default function Transactions() {
                                             </div>
                                         )}
                                     </TableCell>
-                                    <TableCell>
-                                        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                                            {transaction.type}
-                                        </div>
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-                                            {transaction.category}
-                                        </div>
-                                    </TableCell>
+                                    {accountData?.account?.type === "BANK" && (
+                                        <>
+                                            <TableCell>
+                                                <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                                                    {transaction.type}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                                                    {transaction.category}
+                                                </div>
+                                            </TableCell>
+                                        </>
+                                    )}
                                     <TableCell
                                         className={`text-right font-medium ${
                                             transaction.direction === "CREDIT"
