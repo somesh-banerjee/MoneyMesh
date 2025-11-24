@@ -30,6 +30,7 @@ import {
     CardDescription,
     CardContent,
 } from "@/components/ui/card";
+import { TimeseriesChart } from "@/components/TimeSeriesChart";
 
 type Account = {
     id: string;
@@ -192,6 +193,8 @@ export default function Transactions() {
                     </CardContent>
                 </Card>
             )}
+
+            <hr className="my-6" />
 
             {accountData?.account.type !== "INVESTMENT" && (
                 <div className="flex items-center justify-end space-x-4">
@@ -372,6 +375,12 @@ export default function Transactions() {
                     </Button>
                 </div>
             </div>
+
+            <hr className="my-6" />
+
+            <TimeseriesChart
+                accountId={accountData?.account?.id}
+            />
         </div>
     );
 }
