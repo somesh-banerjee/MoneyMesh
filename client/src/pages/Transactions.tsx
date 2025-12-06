@@ -21,7 +21,14 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { AddAccountModal } from "@/components/AddAccountModal";
 import { format } from "date-fns";
-import { Building, ChevronLeft, ChevronRight, Tag, Wallet } from "lucide-react";
+import {
+    Building,
+    ChevronLeft,
+    ChevronRight,
+    Download,
+    Tag,
+    Wallet,
+} from "lucide-react";
 import { AddTransactionModal } from "@/components/AddTransactionModal";
 import {
     Card,
@@ -31,6 +38,7 @@ import {
     CardContent,
 } from "@/components/ui/card";
 import { TimeseriesChart } from "@/components/TimeSeriesChart";
+import { useUser } from "@/lib/UserContext";
 
 type Account = {
     id: string;
@@ -50,6 +58,7 @@ type Transaction = {
 };
 
 export default function Transactions() {
+    const { accessToken } = useUser();
     const [selectedAccount, setSelectedAccount] = useState<string>("");
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(50);
@@ -117,6 +126,36 @@ export default function Transactions() {
         refetchAccounts();
     };
 
+    const downloadTransactions = async () => {
+        if (!selectedAccount) return;
+        console.log(selectedAccount);
+
+        const res = await fetch(
+            import.meta.env.VITE_GRAPHQL_ENDPOINT +
+                `/transactions/download/${selectedAccount}`,
+            {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            },
+        );
+
+        if (!res.ok) {
+            throw new Error("Failed to download transactions");
+        }
+
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `${accountData?.account.name}_transactions.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <div className="p-6 space-y-6">
             <div className="flex justify-between items-center">
@@ -138,9 +177,14 @@ export default function Transactions() {
                         </SelectContent>
                     </Select>
                 </div>
-                <AddAccountModal onAccountAdded={handleAccountAdded}>
-                    <Button>Add Account</Button>
-                </AddAccountModal>
+                <div className="flex space-x-4">
+                    <AddAccountModal onAccountAdded={handleAccountAdded}>
+                        <Button>Add Account</Button>
+                    </AddAccountModal>
+                    <Button onClick={downloadTransactions}>
+                        Transactions CSV <Download />
+                    </Button>
+                </div>
             </div>
 
             {/* Account Details */}
@@ -378,10 +422,9 @@ export default function Transactions() {
 
             <hr className="my-6" />
 
-            <TimeseriesChart
-                accountId={accountData?.account?.id}
-            />
+            <TimeseriesChart accountId={accountData?.account?.id} />
         </div>
     );
 }
+
 

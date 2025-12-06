@@ -125,4 +125,43 @@ export class TransactionService {
     }
   }
 
+  async downloadTransactions(userId: string, accountId: string): Promise<string> {
+    const transactions = await this.prisma.transaction.findMany({
+      where: {
+        user_id: userId,
+        account_id: accountId
+      },
+      orderBy: {
+        created_at: 'desc'
+      }
+    })
+
+    // Define CSV headers
+    const headers = [
+      'Date',
+      'Amount',
+      'Type',
+      'Category',
+      'Direction',
+      'Counterparty',
+      'Note'
+    ];
+
+    // Convert transactions to CSV rows
+    const rows = transactions.map(transaction => {
+      return [
+        `"${transaction.created_at.toDateString()}"`,
+        transaction.amount,
+        `"${transaction.type}"`,
+        `"${transaction.category || ''}"`,
+        `"${transaction.direction}"`,
+        `"${transaction.counterparty || ''}"`,
+        `"${transaction.note || ''}"`,
+      ].join(',');
+    });
+
+    // Combine headers and rows
+    return [headers.join(','), ...rows].join('\n');
+  }
+
 }
