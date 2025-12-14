@@ -1,30 +1,74 @@
 version: '3.9'
 
 services:
-    postgres:
-        image: postgres:14-alpine
-        container_name: postgres-db
-        restart: always
-        environment:
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-            POSTGRES_DB: postgres
-        ports:
-            - "5432:5432"
-        volumes:
-            - moneymesh_data:/var/lib/postgresql/data
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: moneymesh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: moneymesh
+    ports:
+      - "15432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/prisma/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-moneymesh}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
-    backend:
-        build:
-            context: ./backend
-            dockerfile: ./Dockerfile
-        container_name: backend
-        depends_on:
-            - postgres
-        ports:
-            - "3000:3000"
-        environment:
-            DATABASE_URL: postgres://postgres:postgres@postgres:5432/postgres
+  # Backend Service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: moneymesh-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "13000:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:15432/${POSTGRES_DB:-moneymesh}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-your-jwt-secret}
+      PORT: 3000
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    command: >
+      sh -c "npm run prisma:deploy && 
+             npm run prisma:generate && 
+             npm run start:dev"
+
+  # Frontend Service
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    container_name: moneymesh-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "13001:3000"
+    environment:
+      - NODE_ENV=development
+      - VITE_GRAPHQL_ENDPOINT=http://${backend}:13000aphql
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    command: >
+      sh -c "npm install && 
+             npm run dev -- --host"
+
 
 volumes:
-    moneymesh_data:
+  postgres_data:
