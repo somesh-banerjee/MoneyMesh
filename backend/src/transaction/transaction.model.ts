@@ -18,7 +18,10 @@ export class TransactionModel {
 
   @Field()
   amount: string;
-  
+
+  @Field()
+  balance: string;
+
   @Field()
   category: string;
 

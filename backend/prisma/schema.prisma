@@ -47,6 +47,7 @@ model Transaction {
   user_id      String
   account_id   String
   amount       Decimal
+  balance      Decimal
   type         TransactionType
   direction    TransactionDirection
   counterparty String

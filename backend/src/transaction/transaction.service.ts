@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateTransactionInput, TransactionModel } from "./transaction.model";
 import { TransactionDirection as TransactionDirectionEnum, AccountType } from '@prisma/client';
@@ -9,22 +9,33 @@ export class TransactionService {
   constructor(private readonly prisma: PrismaService) { }
 
   async create(createTransactionInput: CreateTransactionInput, userId: string): Promise<TransactionModel> {
-    let transaction
+    const lastTx = await this.prisma.transaction.findFirst({
+      where: { account_id: createTransactionInput.account_id },
+      orderBy: { created_at: 'desc' },
+      take: 1
+    });
 
-    const singleTransaction = await this.prisma.$transaction(async (tx) => {
+    if (lastTx && lastTx.created_at > createTransactionInput.created_at) {
+      throw new ForbiddenException('Transactions must be created in chronological order');
+    }
+    let transaction;
+
+    const singleTransaction = await this.prisma.$transaction(async (_tx) => {
+      const lastBalance = new Decimal(lastTx?.balance ?? 0);
+      const amount = new Decimal(createTransactionInput.amount)
+      const balanceChange = createTransactionInput.direction === TransactionDirectionEnum.CREDIT ? amount : amount.negated()
+
       transaction = await this.prisma.transaction.create({
         data: {
           ...createTransactionInput,
-          user_id: userId
+          user_id: userId,
+          balance: lastBalance.add(balanceChange).toString()
         },
         include: {
           user: true,
           account: true
         }
       })
-
-      const amount = new Decimal(transaction.amount)
-      const balanceChange = createTransactionInput.direction === TransactionDirectionEnum.CREDIT ? amount : amount.negated()
 
       await this.prisma.account.update({
         where: {
@@ -94,6 +105,7 @@ export class TransactionService {
     return transactions.map(transaction => ({
       ...transaction,
       amount: transaction.amount.toString(),
+      balance: transaction.balance.toString(),
       account: {
         ...transaction.account,
         balance: transaction.account.balance.toString(),
@@ -117,6 +129,7 @@ export class TransactionService {
     return {
       ...transaction,
       amount: transaction.amount.toString(),
+      balance: transaction.balance.toString(),
       account: {
         ...transaction.account,
         balance: transaction.account.balance.toString(),

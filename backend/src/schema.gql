@@ -155,6 +155,7 @@ enum TransactionDirection {
 type TransactionModel {
   account: AccountModel!
   amount: String!
+  balance: String!
   category: String!
   counterparty: String!
   created_at: DateTime!
