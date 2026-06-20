@@ -5,6 +5,8 @@ FROM node:22-alpine as development
 
 WORKDIR /usr/src/app
 
+RUN apk add --no-cache openssl
+
 # Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/

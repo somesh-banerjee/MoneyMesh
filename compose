@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Podman Compose wrapper for MoneyMesh (this system has Podman, not Docker)
+set -euo pipefail
+cd "$(dirname "$0")"
+exec podman compose "$@"

@@ -34,24 +34,19 @@ EXPOSE 80
 # Start nginx
 CMD ["nginx", "-g", "daemon off;"]
 
+# Development Stage — Debian/glibc avoids Alpine musl + npm optional-deps bugs
 # ===================================
-# Development Stage
-# ===================================
-FROM node:20-alpine as development
+FROM node:22-bookworm-slim as development
 
 WORKDIR /usr/src/app
 
-# Copy package files
 COPY package*.json ./
+COPY scripts/container-dev.sh ./scripts/container-dev.sh
+RUN chmod +x ./scripts/container-dev.sh \
+    && npm install --include=optional --no-package-lock
 
-# Install dependencies
-RUN npm install
-
-# Copy application code
 COPY . .
 
-# Expose port 3000
-EXPOSE 3000
+EXPOSE 5173
 
-# Start development server
-CMD ["npm", "run", "dev", "--", "--host"]
+CMD ["./scripts/container-dev.sh"]

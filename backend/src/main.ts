@@ -8,7 +8,10 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
         logger: _getLogLevels(),
         cors: {
-            origin: ['http://localhost:5173'],
+            origin: (process.env.CORS_ORIGINS ?? 'http://localhost:5173,http://localhost:25173')
+                .split(',')
+                .map((origin) => origin.trim())
+                .filter(Boolean),
             credentials: true,
         },
     });
