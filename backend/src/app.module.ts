@@ -12,11 +12,19 @@ import { TransactionModule } from './transaction/transaction.module';
 import { InvestmentModule } from './investment/investment.module';
 import { BudgetModule } from './budget/budget.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { HealthModule } from './health/health.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { AppThrottlerGuard } from './shared/guards/throttler.guard';
 
 @Module({
   imports: [
     // core
     SharedModule,
+    ThrottlerModule.forRoot([{
+      ttl: 60_000,
+      limit: 120,
+    }]),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -26,6 +34,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
       plugins: [ApolloServerPluginLandingPageLocalDefault()],
     }),
     AuthModule,
+    HealthModule,
     // entities
     AnalyticsModule,
     UserModule,
@@ -35,6 +44,12 @@ import { AnalyticsModule } from './analytics/analytics.module';
     TransactionModule
   ],
   controllers: [],
-  providers: [PrismaService],
+  providers: [
+    PrismaService,
+    {
+      provide: APP_GUARD,
+      useClass: AppThrottlerGuard,
+    },
+  ],
 })
 export class AppModule { }

@@ -2,8 +2,11 @@ import { JwtPayload } from "src/shared/decorators/jwt-payload.decorator";
 import { HomePageAnalyticsDto, TimelineAnalyticsDto } from "./analytics.dto";
 import { AnalyticsService } from "./analytics.service";
 import { Args, Query, Resolver } from "@nestjs/graphql";
+import { UseGuards } from "@nestjs/common";
+import { JwtAuthGuard } from "src/shared/guards/auth.guard";
 
 @Resolver()
+@UseGuards(JwtAuthGuard)
 export class AnalyticsResolver {
   constructor(private readonly analyticsService: AnalyticsService) { }
 

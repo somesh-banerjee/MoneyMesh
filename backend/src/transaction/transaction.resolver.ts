@@ -14,7 +14,7 @@ export class TransactionResolver {
   async getTransactions(
     @JwtPayload('id') userId: string,
     @Args('accountId') accountId: string,
-    @Args('orderBy', { defaultValue: 'created_at' }) orderBy: 'party' | 'category' | 'type' | 'direction' | 'amount' | 'created_at' | 'updated_at',
+    @Args('orderBy', { defaultValue: 'created_at' }) orderBy: 'counterparty' | 'category' | 'type' | 'direction' | 'amount' | 'created_at' | 'updated_at',
     @Args('orderDirection', { defaultValue: 'desc' }) orderDirection: 'asc' | 'desc',
     @Args('limit', { defaultValue: 10 }) limit: number,
     @Args('offset', { defaultValue: 0 }) offset: number

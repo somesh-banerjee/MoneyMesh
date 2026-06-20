@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { INestApplication, LogLevel, Logger } from '@nestjs/common';
+import { INestApplication, LogLevel, Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CONSTANTS, ConfigSchema } from './shared/modules/config';
+import helmet from 'helmet';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule, {
@@ -15,6 +16,17 @@ async function bootstrap() {
             credentials: true,
         },
     });
+
+    app.use(helmet({
+        contentSecurityPolicy: false,
+        crossOriginEmbedderPolicy: false,
+    }));
+
+    app.useGlobalPipes(new ValidationPipe({
+        transform: true,
+        whitelist: true,
+        forbidNonWhitelisted: true,
+    }));
 
     _printEnvVariables(app);
     await _configureServer(app);

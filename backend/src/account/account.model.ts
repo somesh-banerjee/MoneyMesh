@@ -1,6 +1,7 @@
 import { ObjectType, Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { UserModel } from 'src/user/user.model';
 import { AccountType as AccountTypeEnum } from '@prisma/client';
+import { IsEnum, IsString, Length, MaxLength, MinLength } from 'class-validator';
 
 registerEnumType(AccountTypeEnum, {
   name: 'AccountType'
@@ -37,12 +38,18 @@ export class AccountModel {
 @InputType()
 export class CreateAccountInput {
   @Field()
+  @IsString()
+  @MinLength(1)
+  @MaxLength(100)
   name: string;
 
   @Field(type => AccountTypeEnum)
+  @IsEnum(AccountTypeEnum)
   type: AccountTypeEnum;
 
   @Field()
+  @IsString()
+  @Length(3, 3)
   currency: string;
 }
 

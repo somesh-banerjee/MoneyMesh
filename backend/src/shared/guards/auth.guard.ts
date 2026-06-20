@@ -4,7 +4,11 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  getRequest(context: ExecutionContext): Request {
+  getRequest(context: ExecutionContext) {
+    if (context.getType() === 'http') {
+      return context.switchToHttp().getRequest();
+    }
+
     const ctx = GqlExecutionContext.create(context);
     const request = ctx.getContext().req;
 
@@ -15,13 +19,19 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return request;
   }
 
-  handleRequest(err: any, user: any, info: any, context: ExecutionContext) {
+  handleRequest(err: any, user: any, _info: any, context: ExecutionContext) {
     if (err || !user) {
       throw err || new UnauthorizedException();
     }
 
-    const ctx = GqlExecutionContext.create(context);
-    ctx.getContext().jwtPayload = user;
+    if (context.getType() === 'http') {
+      const request = context.switchToHttp().getRequest();
+      request.user = user;
+      request.jwtPayload = user;
+    } else {
+      const ctx = GqlExecutionContext.create(context);
+      ctx.getContext().jwtPayload = user;
+    }
 
     return user;
   }

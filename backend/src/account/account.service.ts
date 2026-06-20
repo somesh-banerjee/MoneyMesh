@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/shared/services/prisma.service/prisma.service';
 import { AccountModel, CreateAccountInput, UpdateAccountInput } from './account.model';
 import { AccountType } from '@prisma/client';
@@ -20,6 +20,10 @@ export class AccountService {
         user: true
       }
     });
+
+    if (!account) {
+      throw new NotFoundException('Account not found');
+    }
 
     return {
       ...account,

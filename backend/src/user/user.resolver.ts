@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/shared/guards/auth.guard';
 import { JwtPayload } from 'src/shared/decorators/jwt-payload.decorator';
+import { Throttle } from '@nestjs/throttler';
 
 @Resolver(() => UserModel)
 export class UserResolver {
@@ -17,6 +18,7 @@ export class UserResolver {
     return await this.userService.findOne({ id: userId });
   }
 
+  @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Mutation(() => UserModel, { name: 'register' })
   async register(@Args('createUserInput') createUserInput: CreateUserInput) {
     return await this.userService.create(createUserInput);
