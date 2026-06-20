@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,7 +30,7 @@ export function EditInvestmentValueDialog({
   const [value, setValue] = useState(currentValue?.toString() || "");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [updateInvestment] = useMutation(UPDATE_INVESTMENT);
+  const [updateInvestment] = useMutation<any>(UPDATE_INVESTMENT);
 
   const handleSave = async () => {
     if (!value) {

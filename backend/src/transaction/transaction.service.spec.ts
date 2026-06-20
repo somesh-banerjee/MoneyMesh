@@ -1,5 +1,5 @@
 import { ForbiddenException } from '@nestjs/common';
-import { TransactionDirection, TransactionType } from '@prisma/client';
+import { TransactionDirection, TransactionType } from 'src/shared/prisma';
 import { TransactionService } from './transaction.service';
 
 describe('TransactionService', () => {

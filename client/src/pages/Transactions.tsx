@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GET_ACCOUNT_BY_ID, GET_ACCOUNTS } from "@/graphql/queries/account";
 import { GET_TRANSACTIONS } from "@/graphql/queries/transaction";
 import { Button } from "@/components/ui/button";
@@ -63,7 +63,7 @@ export default function Transactions() {
     const [page, setPage] = useState(0);
     const [pageSize, setPageSize] = useState(50);
 
-    const { data: accountsData, refetch: refetchAccounts } = useQuery(
+    const { data: accountsData, refetch: refetchAccounts } = useQuery<any>(
         GET_ACCOUNTS,
         {
             variables: {
@@ -75,7 +75,7 @@ export default function Transactions() {
         },
     );
 
-    const { data: accountData, refetch: refetchAccount } = useQuery(
+    const { data: accountData, refetch: refetchAccount } = useQuery<any>(
         GET_ACCOUNT_BY_ID,
         {
             variables: {
@@ -89,7 +89,7 @@ export default function Transactions() {
         data: transactionsData,
         loading: loadingTransactions,
         refetch: refetchTransactions,
-    } = useQuery(GET_TRANSACTIONS, {
+    } = useQuery<any>(GET_TRANSACTIONS, {
         variables: {
             accountId: selectedAccount,
             limit: pageSize,

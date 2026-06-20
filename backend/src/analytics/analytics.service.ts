@@ -1,8 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { HomePageAnalyticsDto } from "./analytics.dto";
-import { Decimal } from "@prisma/client/runtime/library";
-import { AccountType, Transaction, TransactionDirection, TransactionType } from "@prisma/client";
+import { Decimal, AccountType, Transaction, TransactionDirection, TransactionType } from "src/shared/prisma";
 import { Logger } from "@nestjs/common";
 
 @Injectable()

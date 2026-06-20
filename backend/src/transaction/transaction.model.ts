@@ -1,5 +1,5 @@
 import { ObjectType, Field, InputType, registerEnumType } from '@nestjs/graphql';
-import { TransactionType as TransactionTypeEnum, TransactionDirection as TransactionDirectionEnum } from '@prisma/client';
+import { TransactionType as TransactionTypeEnum, TransactionDirection as TransactionDirectionEnum } from 'src/shared/prisma';
 import { AccountModel } from 'src/account/account.model';
 import { UserModel } from 'src/user/user.model';
 import { IsDate, IsEnum, IsNumberString, IsString, IsUUID, MaxLength, MinLength } from 'class-validator';

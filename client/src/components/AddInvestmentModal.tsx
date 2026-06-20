@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { CREATE_INVESTMENT } from "@/graphql/mutations/investment";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,7 +40,7 @@ export function AddInvestmentModal({
     children,
 }: AddInvestmentModalProps) {
     const [open, setOpen] = useState(false);
-    const [createInvestment, { loading }] = useMutation(CREATE_INVESTMENT, {
+    const [createInvestment, { loading }] = useMutation<any>(CREATE_INVESTMENT, {
         onCompleted: () => {
             toast.success("Investment added successfully");
             setOpen(false);

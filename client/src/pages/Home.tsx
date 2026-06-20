@@ -1,13 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useEffect, useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GET_HOME_PAGE_ANALYTICS } from "@/graphql/queries/analytics";
 
 export default function Home() {
     const [period, setPeriod] = useState<"monthly" | "yearly">("monthly");
     const [range, setRange] = useState<"current" | "previous">("current");
-    const { data, refetch } = useQuery(GET_HOME_PAGE_ANALYTICS, {
+    const { data, refetch } = useQuery<any>(GET_HOME_PAGE_ANALYTICS, {
         variables: {
             period,
             range,

@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/shared/services/prisma.service/prisma.service';
 import { AccountModel, CreateAccountInput, UpdateAccountInput } from './account.model';
-import { AccountType } from '@prisma/client';
+import { AccountType } from 'src/shared/prisma';
 
 @Injectable()
 export class AccountService {

@@ -1,6 +1,6 @@
 import { ObjectType, Field, InputType, registerEnumType } from '@nestjs/graphql';
 import { UserModel } from 'src/user/user.model';
-import { AccountType as AccountTypeEnum } from '@prisma/client';
+import { AccountType as AccountTypeEnum } from 'src/shared/prisma';
 import { IsEnum, IsString, Length, MaxLength, MinLength } from 'class-validator';
 
 registerEnumType(AccountTypeEnum, {

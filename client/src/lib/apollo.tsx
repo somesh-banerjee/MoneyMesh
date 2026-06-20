@@ -1,10 +1,10 @@
 import {
     ApolloClient,
-    ApolloProvider,
     from,
     HttpLink,
     InMemoryCache,
 } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client/react";
 import { setContext } from "@apollo/client/link/context";
 import { useMemo } from "react";
 import { useUser } from "./UserContext";

@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Podman Compose wrapper — development stack (hot reload)
+set -euo pipefail
+cd "$(dirname "$0")"
+exec podman compose -f docker-compose.dev.yml "$@"

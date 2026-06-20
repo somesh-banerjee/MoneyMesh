@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useRef, useState } from "react";
 import { useUser } from "@/lib/UserContext";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { LOGIN_USER, REGISTER_USER } from "@/graphql/mutations/user";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +15,8 @@ export default function LoginPage() {
     const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const [login] = useMutation(LOGIN_USER);
-    const [register] = useMutation(REGISTER_USER);
+    const [login] = useMutation<any>(LOGIN_USER);
+    const [register] = useMutation<any>(REGISTER_USER);
 
     // Refs for login
     const loginEmailRef = useRef<HTMLInputElement>(null);

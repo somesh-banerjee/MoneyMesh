@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useEffect, useRef, useState } from "react";
 import { useUser } from "@/lib/UserContext";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { LOGIN_USER, REGISTER_USER } from "@/graphql/mutations/user";
 import { toast } from "sonner";
 
@@ -22,8 +22,8 @@ const LoginSignupModal = () => {
     const [open, setOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const [login] = useMutation(LOGIN_USER);
-    const [register] = useMutation(REGISTER_USER);
+    const [login] = useMutation<any>(LOGIN_USER);
+    const [register] = useMutation<any>(REGISTER_USER);
 
     // Refs for login
     const loginEmailRef = useRef<HTMLInputElement>(null);

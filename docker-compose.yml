@@ -1,4 +1,5 @@
-# MoneyMesh — run everything with: podman compose up
+# MoneyMesh — production stack: ./compose up --build
+# Development stack: ./compose-dev up --build  (see docker-compose.dev.yml)
 #
 # App URLs (host machine):
 #   Frontend:  http://localhost:25173
@@ -36,7 +37,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: development
+      target: production
     container_name: moneymesh-backend
     restart: unless-stopped
     depends_on:
@@ -45,41 +46,25 @@ services:
     ports:
       - "${BACKEND_HOST_PORT:-23000}:3000"
     environment:
-      NODE_ENV: dev
-      SYSTEM_NODE_ENV: dev
+      NODE_ENV: production
+      SYSTEM_NODE_ENV: production
       SYSTEM_PORT: "3000"
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-moneymesh}?schema=public
-      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
+      JWT_SECRET: ${JWT_SECRET:-local-compose-only-jwt-secret-min-32-chars}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-3600}
       BCRYPT_SALT_ROUNDS: ${BCRYPT_SALT_ROUNDS:-10}
-      CORS_ORIGINS: http://localhost:${FRONTEND_HOST_PORT:-25173},http://localhost:5173
-    volumes:
-      - ./backend:/usr/src/app
-      - backend_node_modules:/usr/src/app/node_modules
-    command: >
-      sh -c "npm install --include=optional &&
-             npm run prisma:generate &&
-             npm run prisma:deploy &&
-             npm run start:prod"
+      CORS_ORIGINS: http://localhost:${FRONTEND_HOST_PORT:-25173}
 
   frontend:
     build:
       context: ./client
       dockerfile: Dockerfile
-      target: development
+      target: production
+      args:
+        VITE_GRAPHQL_ENDPOINT: http://localhost:${BACKEND_HOST_PORT:-23000}
     container_name: moneymesh-frontend
-    restart: on-failure:3
+    restart: unless-stopped
     depends_on:
       - backend
     ports:
-      - "${FRONTEND_HOST_PORT:-25173}:5173"
-    environment:
-      VITE_GRAPHQL_ENDPOINT: http://localhost:${BACKEND_HOST_PORT:-23000}
-    volumes:
-      - ./client:/usr/src/app
-      - frontend_node_modules:/usr/src/app/node_modules
-    command: sh ./scripts/container-dev.sh
-
-volumes:
-  backend_node_modules:
-  frontend_node_modules:
+      - "${FRONTEND_HOST_PORT:-25173}:80"

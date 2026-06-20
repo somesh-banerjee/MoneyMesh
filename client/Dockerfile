@@ -5,16 +5,15 @@ FROM node:20-alpine as build
 
 WORKDIR /usr/src/app
 
-# Copy package files
+ARG VITE_GRAPHQL_ENDPOINT=http://localhost:23000
+ENV VITE_GRAPHQL_ENDPOINT=$VITE_GRAPHQL_ENDPOINT
+
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+RUN npm ci
 
-# Copy application code
 COPY . .
 
-# Build the application
 RUN npm run build
 
 # ===================================

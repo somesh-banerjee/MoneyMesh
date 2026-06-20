@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GET_TIMESERIES } from "@/graphql/queries/analytics";
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -32,7 +32,7 @@ export function TimeseriesChart({ accountId }: Props) {
     const [to, setTo] = useState<Date>(new Date());
 
     // --- Fetch transactions only when both dates are chosen ---
-    const { data, loading, refetch } = useQuery(GET_TIMESERIES, {
+    const { data, loading, refetch } = useQuery<any>(GET_TIMESERIES, {
         variables: {
             accountId,
             from: from ? from.toISOString() : null,

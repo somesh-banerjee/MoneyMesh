@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client/react";
 import { GET_INVESTMENTS } from "@/graphql/queries/investment";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -49,7 +49,7 @@ export default function Investments() {
         data,
         error,
         refetch: refetchInvestments,
-    } = useQuery(GET_INVESTMENTS, {
+    } = useQuery<any>(GET_INVESTMENTS, {
         variables: { limit, offset: page * limit },
         fetchPolicy: "cache-and-network",
     });

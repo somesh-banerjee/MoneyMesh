@@ -1,0 +1,83 @@
+# MoneyMesh — development stack: ./compose-dev up --build
+#
+# Hot reload, source bind mounts, Vite dev server.
+# App URLs (host machine):
+#   Frontend:  http://localhost:25173
+#   Backend:   http://localhost:23000/graphql
+#   Postgres:  localhost:25432
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: moneymesh-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-moneymesh}
+    ports:
+      - "${POSTGRES_HOST_PORT:-25432}:5432"
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-moneymesh}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: moneymesh-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_HOST_PORT:-23000}:3000"
+    environment:
+      NODE_ENV: dev
+      SYSTEM_NODE_ENV: dev
+      SYSTEM_PORT: "3000"
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@postgres:5432/${POSTGRES_DB:-moneymesh}?schema=public
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-3600}
+      BCRYPT_SALT_ROUNDS: ${BCRYPT_SALT_ROUNDS:-10}
+      CORS_ORIGINS: http://localhost:${FRONTEND_HOST_PORT:-25173},http://localhost:5173
+    volumes:
+      - ./backend:/usr/src/app
+      - backend_node_modules:/usr/src/app/node_modules
+    command: >
+      sh -c "npm install --include=optional &&
+             npm run prisma:generate &&
+             npm run prisma:deploy &&
+             npm run start:dev"
+
+  frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      target: development
+    container_name: moneymesh-frontend
+    restart: on-failure:3
+    depends_on:
+      - backend
+    ports:
+      - "${FRONTEND_HOST_PORT:-25173}:5173"
+    environment:
+      VITE_GRAPHQL_ENDPOINT: http://localhost:${BACKEND_HOST_PORT:-23000}
+    volumes:
+      - ./client:/usr/src/app
+      - frontend_node_modules:/usr/src/app/node_modules
+    command: sh ./scripts/container-dev.sh
+
+volumes:
+  backend_node_modules:
+  frontend_node_modules:

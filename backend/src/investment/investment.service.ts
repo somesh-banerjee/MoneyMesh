@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateInvestmentInput, InvestmentModel, UpdateInvestmentInput } from "./investment.model";
 import { AccountService } from "src/account/account.service";
-import { AccountType, TransactionDirection, TransactionType } from "@prisma/client";
+import { AccountType, TransactionDirection, TransactionType } from "src/shared/prisma";
 import { TransactionService } from "src/transaction/transaction.service";
 
 @Injectable()

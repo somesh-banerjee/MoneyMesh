@@ -1,8 +1,7 @@
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "src/shared/services/prisma.service/prisma.service";
 import { CreateTransactionInput, TransactionModel } from "./transaction.model";
-import { TransactionDirection as TransactionDirectionEnum, AccountType } from '@prisma/client';
-import { Decimal } from "@prisma/client/runtime/library";
+import { TransactionDirection as TransactionDirectionEnum, AccountType, Decimal } from 'src/shared/prisma';
 
 @Injectable()
 export class TransactionService {

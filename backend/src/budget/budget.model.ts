@@ -1,6 +1,6 @@
 import { ObjectType, Field, registerEnumType, InputType } from "@nestjs/graphql";
 import { UserModel } from "src/user/user.model";
-import { BudgetPeriod } from "@prisma/client"
+import { BudgetPeriod } from "src/shared/prisma"
 
 registerEnumType(BudgetPeriod, {
   name: 'BudgetPeriod'

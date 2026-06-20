@@ -1,5 +1,5 @@
 # ===================================
-# Development Stage
+# Development Stage (local Docker use only — not used by compose)
 # ===================================
 FROM node:22-alpine as development
 
@@ -7,44 +7,61 @@ WORKDIR /usr/src/app
 
 RUN apk add --no-cache openssl
 
-# Copy package files
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY prisma.config.ts ./
 
-# Install dependencies including dev dependencies
-RUN npm install
+RUN npm install && npm run prisma:generate
 
-# Copy application code
 COPY . .
 
-# Expose application port
 EXPOSE 3000
 
-# Command to run the application in development
 CMD ["npm", "run", "start:dev"]
 
 # ===================================
-# Production Build Stage
+# Build Stage
 # ===================================
-FROM node:22-alpine as production
-
-ARG NODE_ENV=production
-ENV NODE_ENV=${NODE_ENV}
+FROM node:22-alpine as build
 
 WORKDIR /usr/src/app
 
-# Copy package files
+RUN apk add --no-cache openssl
+
 COPY package*.json ./
 COPY prisma ./prisma/
+COPY prisma.config.ts ./
 
-# Install only production dependencies
-RUN npm ci --only=production
+RUN npm ci
 
-# Copy built application from development stage
-COPY --from=development /usr/src/app/dist ./dist
+COPY . .
 
-# Expose application port
+RUN npm run prisma:generate && npm run build
+
+# ===================================
+# Production Stage
+# ===================================
+FROM node:22-alpine as production
+
+ENV NODE_ENV=production
+
+WORKDIR /usr/src/app
+
+RUN apk add --no-cache openssl
+
+COPY package*.json ./
+COPY prisma ./prisma/
+COPY prisma.config.ts ./
+COPY docker-entrypoint.sh ./
+
+RUN npm ci --omit=dev \
+    && npm install prisma@7.8.0 --no-save \
+    && chmod +x docker-entrypoint.sh
+
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/src/generated ./src/generated
+
 EXPOSE 3000
 
-# Command to run the application in production
+ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["node", "dist/main"]

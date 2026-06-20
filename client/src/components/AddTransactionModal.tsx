@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { CREATE_TRANSACTION } from "@/graphql/mutations/transaction";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,7 +34,7 @@ export function AddTransactionModal({
     children,
 }: AddTransactionModalProps) {
     const [open, setOpen] = useState(false);
-    const [createTransaction, { loading }] = useMutation(CREATE_TRANSACTION, {
+    const [createTransaction, { loading }] = useMutation<any>(CREATE_TRANSACTION, {
         onCompleted: () => {
             toast.success("Transaction added successfully");
             setOpen(false);

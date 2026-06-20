@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client/react";
 import { CREATE_ACCOUNT } from "@/graphql/mutations/account";
 import { toast } from "sonner";
 
@@ -28,7 +28,7 @@ export function AddAccountModal({
     const [name, setName] = useState("");
     const [currency, setCurrency] = useState("INR");
     const [type, setType] = useState<AccountType>("BANK");
-    const [createAccount, { loading }] = useMutation(CREATE_ACCOUNT);
+    const [createAccount, { loading }] = useMutation<any>(CREATE_ACCOUNT);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
